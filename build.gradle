@@ -37,6 +37,8 @@ dependencies {
     compile 'org.hibernate:hibernate-core:5.2.3.Final'
     compile 'org.hibernate:hibernate-validator:5.2.4.Final'
     compile 'com.h2database:h2:1.4.191'
+    compile 'org.thymeleaf:thymeleaf-spring4:3.0.2.RELEASE'
+    compile 'org.thymeleaf:thymeleaf:3.0.2.RELEASE'
 
     testCompile 'org.springframework.boot:spring-boot-starter-test:1.4.0.RELEASE'
     testCompile 'junit:junit:4.12'
