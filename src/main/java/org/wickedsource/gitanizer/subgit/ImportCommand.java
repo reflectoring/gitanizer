@@ -16,7 +16,7 @@ public class ImportCommand extends SubgitCommand {
 
     private String password;
 
-    private SubgitImportListener listener;
+    private ImportCommandListener listener;
 
     public ImportCommand(String subgitPath) {
         super(subgitPath);
@@ -42,7 +42,7 @@ public class ImportCommand extends SubgitCommand {
         return this;
     }
 
-    public ImportCommand withListener(SubgitImportListener listener) {
+    public ImportCommand withListener(ImportCommandListener listener) {
         this.listener = listener;
         return this;
     }
@@ -55,11 +55,22 @@ public class ImportCommand extends SubgitCommand {
         commandLine.addArgument("--non-interactive");
         commandLine.addArgument(this.targetGitPath);
         DefaultExecutor executor = new DefaultExecutor();
-        ProgressListenerOutputStream progressListenerOutputStream = new ProgressListenerOutputStream();
-        progressListenerOutputStream.registerProgressListener(this.listener);
-        // TODO: route error output to a separate monitored outputstream
-        executor.setStreamHandler(new PumpStreamHandler(progressListenerOutputStream, System.err));
+        executor.setStreamHandler(new PumpStreamHandler(
+                getProgressListener(this.listener),
+                getErrorListener(this.listener)));
         executor.execute(commandLine);
+    }
+
+    private ProgressListenerOutputStream getProgressListener(ImportCommandListener listener) {
+        ProgressListenerOutputStream progressListenerOutputStream = new ProgressListenerOutputStream();
+        progressListenerOutputStream.registerProgressListener(listener);
+        return progressListenerOutputStream;
+    }
+
+    private ErrorListenerOutputStream getErrorListener(ImportCommandListener listener) {
+        ErrorListenerOutputStream errorListenerOutputStream = new ErrorListenerOutputStream();
+        errorListenerOutputStream.registerErrorListener(listener);
+        return errorListenerOutputStream;
     }
 
 

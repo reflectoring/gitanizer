@@ -12,12 +12,12 @@ public class ErrorListenerOutputStream extends OutputStream {
 
     private StringBuilder currentLine = new StringBuilder();
 
-    private List<SubgitImportListener> listeners = new ArrayList<>();
+    private List<ImportCommandListener> listeners = new ArrayList<>();
 
     @Override
     public void write(int b) throws IOException {
         if (b == '\n' || b == '\r') {
-            for (SubgitImportListener listener : this.listeners) {
+            for (ImportCommandListener listener : this.listeners) {
                 listener.onError(currentLine.toString());
             }
             currentLine = new StringBuilder();
@@ -30,7 +30,7 @@ public class ErrorListenerOutputStream extends OutputStream {
      * Register a progress monitor that will be notified each time a progress event was
      * registered in this OutputStream.
      */
-    public void registerErrorListener(SubgitImportListener errorListener) {
+    public void registerErrorListener(ImportCommandListener errorListener) {
         this.listeners.add(errorListener);
     }
 }

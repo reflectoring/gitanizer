@@ -16,7 +16,7 @@ public class ListenerStreamsTest {
     @Test
     public void errorEventsAreReported() throws IOException {
         ErrorListenerOutputStream errorOutputStream = new ErrorListenerOutputStream();
-        Listener listener = new Listener();
+        CommandListener listener = new CommandListener();
         errorOutputStream.registerErrorListener(listener);
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(errorOutputStream));
 
@@ -35,7 +35,7 @@ public class ListenerStreamsTest {
     @Test
     public void progressEventsAreReported() throws IOException {
         ProgressListenerOutputStream progressListenerOutputStream = new ProgressListenerOutputStream();
-        Listener listener = new Listener();
+        CommandListener listener = new CommandListener();
         progressListenerOutputStream.registerProgressListener(listener);
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(progressListenerOutputStream));
 
@@ -59,7 +59,7 @@ public class ListenerStreamsTest {
         assertThat(listener.getProgressReports()).contains(53);
     }
 
-    private static class Listener implements SubgitImportListener {
+    private static class CommandListener implements ImportCommandListener {
         private List<String> errorMessages = new ArrayList<>();
         private List<Integer> progressReports = new ArrayList<>();
 

@@ -1,6 +1,6 @@
 package org.wickedsource.gitanizer.subgit;
 
-public interface SubgitImportListener {
+public interface ImportCommandListener {
 
     void onProgress(int percentage);
 
