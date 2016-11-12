@@ -4,6 +4,9 @@ import java.io.IOException;
 
 public class ImportCommandManualTest {
 
+    /**
+     * Edit the parameters of the ImportCommand and run the main method manually to test it.
+     */
     public static void main(String[] args) throws IOException {
         new ImportCommand("D:\\programs\\subgit-3.2.2\\bin\\subgit.bat")
                 .withSourceSvnUrl("http://svn.apache.org/repos/asf/velocity/engine/")

@@ -1,4 +1,4 @@
-package org.wickedsource.gitanizer.security;
+package org.wickedsource.gitanizer.core.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

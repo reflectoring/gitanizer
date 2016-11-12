@@ -1,13 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"/>
     <title>HELLO WORLD</title>
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
-    <link rel="stylesheet" href="AdminLTE/css/AdminLTE.min.css">
-    <link rel="stylesheet" href="AdminLTE/css/skins/skin-red.min.css">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css"/>
+    <link rel="stylesheet" href="AdminLTE/css/AdminLTE.min.css"/>
+    <link rel="stylesheet" href="AdminLTE/css/skins/skin-red.min.css"/>
 </head>
 <body class="hold-transition skin-red layout-top-nav">
 <div class="wrapper">
@@ -30,18 +33,9 @@
 
     <div class="content-wrapper">
         <div class="container">
-            <section class="content-header">
-                <h1>
-                    Welcome to gitanizer!
-                </h1>
-            </section>
 
-            <section class="content">
-                <div class="callout callout-info">
-                    <h4>Welcome!</h4>
-
-                    <p>This is the start page of gitanizer.</p>
-                </div>
+            <section class="content" layout:fragment="content">
+                HERE GOES THE CONTENT
             </section>
 
         </div>

@@ -11,9 +11,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class MirrorController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String helloWorld(Model model) {
+    public String listMirrors(Model model) {
         model.addAttribute("name", "tom");
-        return "classpath:templates/hello";
+        return "listMirrors";
+    }
+
+    @RequestMapping(value = "/mirrors/{id}/edit", method = RequestMethod.GET)
+    public String editMirror(Model model) {
+        return "editMirror";
     }
 
 }
