@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/layout">
 <head>
     <meta charset="UTF-8"/>
     <title>HELLO WORLD</title>
@@ -38,9 +41,10 @@
                             <div class="box">
                                 <div class="box-header">
                                     <h3 class="box-title">Gitanized Subversion Repositories </h3>
-                                    <button type="button" class="btn btn-primary pull-right" style="margin-right: 5px;">
+                                    <a th:href="@{/mirrors/create}" type="button" class="btn btn-primary pull-right"
+                                       style="margin-right: 5px;">
                                         <i class="fa fa-plus"></i> Add a new repository
-                                    </button>
+                                    </a>
 
                                 </div>
                                 <!-- /.box-header -->
@@ -48,14 +52,12 @@
                                     <table class="table table-hover">
                                         <tbody>
                                         <tr>
-                                            <th>Repository Name</th>
-                                            <th>Exposed at URL</th>
+                                            <th>Repository</th>
                                             <th>Last Change</th>
                                             <th>Last Status Message</th>
                                             <th>Options</th>
                                         </tr>
                                         <tr>
-                                            <td>gitanizer</td>
                                             <td>/gitanizer.git</td>
                                             <td>11-7-2014</td>
                                             <td>Import Progress 99%</td>
@@ -65,7 +67,6 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>gitanizer</td>
                                             <td>/gitanizer.git</td>
                                             <td>11-7-2014</td>
                                             <td>Import Progress 99%</td>
@@ -75,7 +76,6 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>gitanizer</td>
                                             <td>/gitanizer.git</td>
                                             <td>11-7-2014</td>
                                             <td>Import Progress 99%</td>
@@ -85,7 +85,6 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>gitanizer</td>
                                             <td>/gitanizer.git</td>
                                             <td>11-7-2014</td>
                                             <td>Import Progress 99%</td>
@@ -95,7 +94,6 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>gitanizer</td>
                                             <td>/gitanizer.git</td>
                                             <td>11-7-2014</td>
                                             <td>Import Progress 99%</td>

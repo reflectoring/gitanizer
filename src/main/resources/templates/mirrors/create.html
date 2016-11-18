@@ -44,22 +44,37 @@
 
                                 </div>
                                 <div class="box-body table-responsive no-padding">
-                                    <form role="form">
+                                    <form role="form" th:action="@{/mirrors/create}" th:object="${form}"
+                                          method="post">
                                         <div class="box-body">
-                                            <div class="form-group">
-                                                <label for="name">Repository name</label>
+                                            <div class="form-group"
+                                                 th:classappend="${#fields.hasErrors('repositoryName')} ? 'has-error' : ''">
+                                                <label for="name"><i th:if="${#fields.hasErrors('repositoryName')}"
+                                                                     class="fa fa-times-circle-o"></i>Repository
+                                                    name</label>
                                                 <input type="text" class="form-control" id="name"
-                                                       placeholder="Add a descriptive name for the repository"/>
+                                                       th:field="*{repositoryName}"
+                                                       placeholder="A name for your repository. Should not contain special characters."/>
+                                                <div th:each="error, it : ${#fields.errors('repositoryName')}">
+                                                    <span class="help-block" th:text="${error}"></span>
+                                                </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="remoteSvnUrl">Remote Subversion URL</label>
+                                            <div class="form-group"
+                                                 th:classappend="${#fields.hasErrors('remoteSvnUrl')} ? 'has-error' : ''">
+                                                <label for="remoteSvnUrl"><i
+                                                        th:if="${#fields.hasErrors('remoteSvnUrl')}"
+                                                        class="fa fa-times-circle-o"></i>Remote Subversion URL</label>
                                                 <input type="text" class="form-control" id="remoteSvnUrl"
+                                                       th:field="*{remoteSvnUrl}"
                                                        placeholder="The URL of the SVN repository to mirror"/>
+                                                <div th:each="error, it : ${#fields.errors('remoteSvnUrl')}">
+                                                    <span class="help-block" th:text="${error}"></span>
+                                                </div>
                                             </div>
                                         </div>
 
                                         <div class="box-footer">
-                                            <button type="submit" class="btn btn-primary">Gitanize!</button>
+                                            <input type="submit" value="Gitanize!" class="btn btn-primary"/>
                                         </div>
                                     </form>
                                 </div>

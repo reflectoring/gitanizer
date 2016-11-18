@@ -5,7 +5,7 @@ import java.net.URL;
 import java.time.LocalDateTime;
 
 @Entity
-@Table
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class Mirror {
 
     @Id
@@ -17,9 +17,6 @@ public class Mirror {
 
     @Column
     private URL remoteSvnUrl;
-
-    @Column
-    private URL localGitUrl;
 
     @Column
     private LocalDateTime lastUpdated;
@@ -46,14 +43,6 @@ public class Mirror {
 
     public void setRemoteSvnUrl(URL remoteSvnUrl) {
         this.remoteSvnUrl = remoteSvnUrl;
-    }
-
-    public URL getLocalGitUrl() {
-        return localGitUrl;
-    }
-
-    public void setLocalGitUrl(URL localGitUrl) {
-        this.localGitUrl = localGitUrl;
     }
 
     public LocalDateTime getLastUpdated() {
