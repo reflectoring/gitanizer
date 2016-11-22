@@ -10,20 +10,20 @@ import javax.validation.ConstraintValidatorContext;
 /**
  * Checks that a specified repository name is not already in use.
  */
-public class UniqueRepositoryNameValidator implements ConstraintValidator<UniqueRepositoryName, String> {
+public class UniqueMirrorNameValidator implements ConstraintValidator<UniqueMirrorName, String> {
 
     private MirrorRepository mirrorRepository;
 
     private MirrorNameSanitizer mirrorNameSanitizer;
 
     @Autowired
-    public UniqueRepositoryNameValidator(MirrorRepository mirrorRepository, MirrorNameSanitizer mirrorNameSanitizer) {
+    public UniqueMirrorNameValidator(MirrorRepository mirrorRepository, MirrorNameSanitizer mirrorNameSanitizer) {
         this.mirrorRepository = mirrorRepository;
         this.mirrorNameSanitizer = mirrorNameSanitizer;
     }
 
     @Override
-    public void initialize(UniqueRepositoryName constraintAnnotation) {
+    public void initialize(UniqueMirrorName constraintAnnotation) {
         // nothing to do
     }
 

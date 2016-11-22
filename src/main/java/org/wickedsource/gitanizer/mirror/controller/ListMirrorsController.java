@@ -1,4 +1,4 @@
-package org.wickedsource.gitanizer.mirror;
+package org.wickedsource.gitanizer.mirror.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;

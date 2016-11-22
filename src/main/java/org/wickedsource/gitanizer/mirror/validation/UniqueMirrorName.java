@@ -9,8 +9,8 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = UniqueRepositoryNameValidator.class)
-public @interface UniqueRepositoryName {
+@Constraint(validatedBy = UniqueMirrorNameValidator.class)
+public @interface UniqueMirrorName {
 
     String message();
 
