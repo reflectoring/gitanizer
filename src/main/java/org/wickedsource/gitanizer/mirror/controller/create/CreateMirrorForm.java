@@ -1,4 +1,4 @@
-package org.wickedsource.gitanizer.mirror.controller;
+package org.wickedsource.gitanizer.mirror.controller.create;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.URL;
@@ -12,15 +12,17 @@ import javax.validation.constraints.Pattern;
  */
 public class CreateMirrorForm {
 
-    @NotNull(message = "{createMirrorForm.repositoryName.notNull}")
-    @NotBlank(message = "{createMirrorForm.repositoryName.notNull}")
-    @Pattern(regexp = "^[a-zA-Z0-9-_]+$", message = "{createMirrorForm.repositoryName.invalid}")
-    @UniqueMirrorName(message = "{createMirrorForm.repositoryName.duplicate}")
+    private long id;
+
+    @NotNull(message = "{mirrorForm.repositoryName.notNull}")
+    @NotBlank(message = "{mirrorForm.repositoryName.notNull}")
+    @Pattern(regexp = "^[a-zA-Z0-9-_]+$", message = "{mirrorForm.repositoryName.invalid}")
+    @UniqueMirrorName(message = "{mirrorForm.repositoryName.duplicate}")
     private String repositoryName;
 
-    @NotNull(message = "{createMirrorForm.remoteSvnUrl.notNull}")
-    @NotBlank(message = "{createMirrorForm.remoteSvnUrl.notNull}")
-    @URL(message = "{createMirrorForm.remoteSvnUrl.invalid}")
+    @NotNull(message = "{mirrorForm.remoteSvnUrl.notNull}")
+    @NotBlank(message = "{mirrorForm.remoteSvnUrl.notNull}")
+    @URL(message = "{mirrorForm.remoteSvnUrl.invalid}")
     private String remoteSvnUrl;
 
     public String getRepositoryName() {
@@ -37,5 +39,13 @@ public class CreateMirrorForm {
 
     public void setRemoteSvnUrl(String remoteSvnUrl) {
         this.remoteSvnUrl = remoteSvnUrl;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

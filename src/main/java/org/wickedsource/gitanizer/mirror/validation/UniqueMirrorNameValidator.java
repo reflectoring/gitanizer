@@ -1,7 +1,6 @@
 package org.wickedsource.gitanizer.mirror.validation;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.wickedsource.gitanizer.mirror.domain.MirrorNameSanitizer;
 import org.wickedsource.gitanizer.mirror.domain.MirrorRepository;
 
 import javax.validation.ConstraintValidator;
@@ -14,12 +13,9 @@ public class UniqueMirrorNameValidator implements ConstraintValidator<UniqueMirr
 
     private MirrorRepository mirrorRepository;
 
-    private MirrorNameSanitizer mirrorNameSanitizer;
-
     @Autowired
-    public UniqueMirrorNameValidator(MirrorRepository mirrorRepository, MirrorNameSanitizer mirrorNameSanitizer) {
+    public UniqueMirrorNameValidator(MirrorRepository mirrorRepository) {
         this.mirrorRepository = mirrorRepository;
-        this.mirrorNameSanitizer = mirrorNameSanitizer;
     }
 
     @Override
@@ -29,7 +25,6 @@ public class UniqueMirrorNameValidator implements ConstraintValidator<UniqueMirr
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        String sanitizedName = mirrorNameSanitizer.sanitizeName(value);
-        return mirrorRepository.countByName(sanitizedName) == 0;
+        return mirrorRepository.countByName(value) == 0;
     }
 }

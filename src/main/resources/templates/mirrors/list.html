@@ -34,13 +34,14 @@
     <div class="content-wrapper">
         <div class="container">
 
-            <section class="content">
-                <th:block layout:fragment="content">
+
+            <th:block layout:fragment="content">
+                <section class="content">
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header">
-                                    <h3 class="box-title">Gitanized Subversion Repositories </h3>
+                                    <h3 class="box-title">Registered Subversion Repositories </h3>
                                     <a th:href="@{/mirrors/create}" type="button" class="btn btn-primary pull-right"
                                        style="margin-right: 5px;">
                                         <i class="fa fa-plus"></i> Add a new repository
@@ -57,49 +58,17 @@
                                             <th>Last Status Message</th>
                                             <th>Options</th>
                                         </tr>
-                                        <tr>
-                                            <td>/gitanizer.git</td>
-                                            <td>11-7-2014</td>
-                                            <td>Import Progress 99%</td>
+                                        <tr th:each="mirror : ${mirrors}">
+                                            <td th:text="${mirror.name}">/gitanizer.git</td>
+                                            <td th:text="${mirror.lastChangeDate}">11-7-2014</td>
+                                            <td th:text="${mirror.lastStatusMessage}">Import Progress 99%</td>
                                             <td>
-                                                <a class="btn btn-default"><i class="fa fa-edit"></i></a>
-                                                <a class="btn btn-default"><i class="fa fa-trash"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>/gitanizer.git</td>
-                                            <td>11-7-2014</td>
-                                            <td>Import Progress 99%</td>
-                                            <td>
-                                                <a class="btn btn-default"><i class="fa fa-edit"></i></a>
-                                                <a class="btn btn-default"><i class="fa fa-trash"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>/gitanizer.git</td>
-                                            <td>11-7-2014</td>
-                                            <td>Import Progress 99%</td>
-                                            <td>
-                                                <a class="btn btn-default"><i class="fa fa-edit"></i></a>
-                                                <a class="btn btn-default"><i class="fa fa-trash"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>/gitanizer.git</td>
-                                            <td>11-7-2014</td>
-                                            <td>Import Progress 99%</td>
-                                            <td>
-                                                <a class="btn btn-default"><i class="fa fa-edit"></i></a>
-                                                <a class="btn btn-default"><i class="fa fa-trash"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>/gitanizer.git</td>
-                                            <td>11-7-2014</td>
-                                            <td>Import Progress 99%</td>
-                                            <td>
-                                                <a class="btn btn-default"><i class="fa fa-edit"></i></a>
-                                                <a class="btn btn-default"><i class="fa fa-trash"></i></a>
+                                                <a class="btn btn-default"
+                                                   th:href="@{/mirrors/{id}/update(id=${mirror.id})}"><i
+                                                        class="fa fa-edit"></i></a>
+                                                <a class="btn btn-default"
+                                                   th:href="@{/mirrors/{id}/delete(id=${mirror.id})}"><i
+                                                        class="fa fa-trash"></i></a>
                                             </td>
                                         </tr>
                                         </tbody>
@@ -108,8 +77,9 @@
                             </div>
                         </div>
                     </div>
-                </th:block>
-            </section>
+                </section>
+            </th:block>
+
 
         </div>
 

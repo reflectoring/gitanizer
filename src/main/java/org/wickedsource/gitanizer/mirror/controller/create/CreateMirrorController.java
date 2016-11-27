@@ -1,4 +1,4 @@
-package org.wickedsource.gitanizer.mirror.controller;
+package org.wickedsource.gitanizer.mirror.controller.create;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,16 +8,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.wickedsource.gitanizer.core.DateProvider;
 import org.wickedsource.gitanizer.mirror.domain.Mirror;
-import org.wickedsource.gitanizer.mirror.domain.MirrorNameSanitizer;
 import org.wickedsource.gitanizer.mirror.domain.MirrorRepository;
 
 import javax.validation.Valid;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.LocalDateTime;
-
-import static org.wickedsource.gitanizer.core.Routes.*;
 
 @Controller
 @Transactional
@@ -25,40 +22,35 @@ public class CreateMirrorController {
 
     private MirrorRepository mirrorRepository;
 
-    private MirrorNameSanitizer mirrorNameSanitizer;
+    private DateProvider dateProvider;
 
     @Autowired
-    public CreateMirrorController(MirrorRepository mirrorRepository, MirrorNameSanitizer mirrorNameSanitizer) {
+    public CreateMirrorController(MirrorRepository mirrorRepository, DateProvider dateProvider) {
         this.mirrorRepository = mirrorRepository;
-        this.mirrorNameSanitizer = mirrorNameSanitizer;
+        this.dateProvider = dateProvider;
     }
 
-    @GetMapping(value = CREATE_MIRROR)
+    @GetMapping(value = "/mirrors/create")
     public String displayForm(Model model) {
         model.addAttribute("form", new CreateMirrorForm());
-        return CREATE_MIRROR;
+        return "/mirrors/create";
     }
 
-    @PostMapping(value = CREATE_MIRROR)
+    @PostMapping(value = "/mirrors/create")
     public String createMirror(@ModelAttribute("form") @Valid CreateMirrorForm form, BindingResult bindingResult) {
-
-        if (bindingResult.hasErrors()) {
-            return CREATE_MIRROR;
-        }
-
         try {
-            String sanitizedName = mirrorNameSanitizer.sanitizeName(form.getRepositoryName());
+            if (bindingResult.hasErrors()) {
+                return "/mirrors/create";
+            }
             Mirror mirror = new Mirror();
-            mirror.setLastUpdated(LocalDateTime.now());
-            mirror.setName(sanitizedName);
+            mirror.setName(form.getRepositoryName());
             mirror.setRemoteSvnUrl(new URL(form.getRemoteSvnUrl()));
-
+            mirror.setLastUpdated(dateProvider.now());
             mirrorRepository.save(mirror);
+            return "redirect:/mirrors/list";
         } catch (MalformedURLException e) {
-            throw new IllegalStateException("Invalid URL! Should have been validated earlier!", e);
+            throw new IllegalStateException("invalid URL!", e);
         }
-
-        return redirect(LIST_MIRRORS);
     }
 
 }
