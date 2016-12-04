@@ -12,14 +12,17 @@ public class Mirror {
     @GeneratedValue
     private long id;
 
-    @Column
+    @Column(nullable = false)
     private String name;
 
-    @Column
+    @Column(nullable = false)
     private URL remoteSvnUrl;
 
-    @Column
+    @Column(nullable = false)
     private LocalDateTime lastUpdated;
+
+    @Column(nullable = false)
+    private boolean syncStatus;
 
     public long getId() {
         return id;
@@ -51,5 +54,13 @@ public class Mirror {
 
     public void setLastUpdated(LocalDateTime lastUpdated) {
         this.lastUpdated = lastUpdated;
+    }
+
+    public boolean isSyncStatus() {
+        return syncStatus;
+    }
+
+    public void setSyncStatus(boolean syncStatus) {
+        this.syncStatus = syncStatus;
     }
 }

@@ -1,0 +1,1 @@
+insert into mirror (id, name, remote_svn_url, last_updated, sync_status) values (1, 'Commons IO', 'https://svn.apache.org/repos/asf/commons/_moved_to_git/io/', '2016-12-04', '0');

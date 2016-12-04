@@ -82,5 +82,6 @@ bootRun {
                     "-Dspring.datasource.username=sa",
                     "-Dspring.datasource.password=sa",
                     "-Dspring.datasource.driverClassName=org.h2.Driver",
+                    "-Dspring.datasource.data=file:src/test/resources/testdata.sql"
             ]
 }

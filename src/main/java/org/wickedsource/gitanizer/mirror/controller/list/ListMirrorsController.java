@@ -32,6 +32,7 @@ public class ListMirrorsController {
             dto.setId(mirror.getId());
             dto.setName(mirror.getName());
             dto.setLastChangeDate(mirror.getLastUpdated());
+            // TODO: add latest status message
             dto.setLastStatusMessage("Test");
             mirrorDTOs.add(dto);
         }
