@@ -12,6 +12,8 @@ public class MirrorDTO {
 
     private String lastStatusMessage;
 
+    private boolean syncStatus;
+
     public long getId() {
         return id;
     }
@@ -42,5 +44,13 @@ public class MirrorDTO {
 
     public void setLastStatusMessage(String lastStatusMessage) {
         this.lastStatusMessage = lastStatusMessage;
+    }
+
+    public boolean isSyncStatus() {
+        return syncStatus;
+    }
+
+    public void setSyncStatus(boolean syncStatus) {
+        this.syncStatus = syncStatus;
     }
 }

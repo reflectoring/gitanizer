@@ -63,20 +63,20 @@
                                             <td th:text="${mirror.lastChangeDate}">11-7-2014</td>
                                             <td th:text="${mirror.lastStatusMessage}">Import Progress 99%</td>
                                             <td>
+                                                <a th:if="${mirror.syncStatus == false}" class="btn btn-default"
+                                                   th:href="@{/mirrors/{id}/continue(id=${mirror.id})}"><i
+                                                        class="fa fa-play"
+                                                        title="Start / Continue Synchronization for this Mirror"></i></a>
+                                                <a th:if="${mirror.syncStatus == true}" class="btn btn-default"
+                                                   th:href="@{/mirrors/{id}/pause(id=${mirror.id})}"><i
+                                                        class="fa fa-pause"
+                                                        title="Pause Synchronization for this Mirror"></i></a>
                                                 <a class="btn btn-default"
                                                    th:href="@{/mirrors/{id}/update(id=${mirror.id})}"><i
                                                         class="fa fa-edit" title="Edit Mirror"></i></a>
                                                 <a class="btn btn-default"
                                                    th:href="@{/mirrors/{id}/delete(id=${mirror.id})}"><i
                                                         class="fa fa-trash" title="Delete Mirror"></i></a>
-                                                <a class="btn btn-default"
-                                                   th:href="@{/mirrors/{id}/continue(id=${mirror.id})}"><i
-                                                        class="fa fa-play"
-                                                        title="Start / Continue Synchronization for this Mirror"></i></a>
-                                                <a class="btn btn-default"
-                                                   th:href="@{/mirrors/{id}/pause(id=${mirror.id})}"><i
-                                                        class="fa fa-pause"
-                                                        title="Pause Synchronization for this Mirror"></i></a>
                                             </td>
                                         </tr>
                                         </tbody>
