@@ -41,10 +41,10 @@
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header">
-                                    <h3 class="box-title">Registered Subversion Repositories </h3>
+                                    <h3 class="box-title">Registered Subversion Repository Mirrors </h3>
                                     <a th:href="@{/mirrors/create}" type="button" class="btn btn-primary pull-right"
                                        style="margin-right: 5px;">
-                                        <i class="fa fa-plus"></i> Add a new repository
+                                        <i class="fa fa-plus"></i> Add a new Mirror
                                     </a>
 
                                 </div>
@@ -65,10 +65,18 @@
                                             <td>
                                                 <a class="btn btn-default"
                                                    th:href="@{/mirrors/{id}/update(id=${mirror.id})}"><i
-                                                        class="fa fa-edit"></i></a>
+                                                        class="fa fa-edit" title="Edit Mirror"></i></a>
                                                 <a class="btn btn-default"
                                                    th:href="@{/mirrors/{id}/delete(id=${mirror.id})}"><i
-                                                        class="fa fa-trash"></i></a>
+                                                        class="fa fa-trash" title="Delete Mirror"></i></a>
+                                                <a class="btn btn-default"
+                                                   th:href="@{/mirrors/{id}/continue(id=${mirror.id})}"><i
+                                                        class="fa fa-play"
+                                                        title="Start / Continue Synchronization for this Mirror"></i></a>
+                                                <a class="btn btn-default"
+                                                   th:href="@{/mirrors/{id}/pause(id=${mirror.id})}"><i
+                                                        class="fa fa-pause"
+                                                        title="Pause Synchronization for this Mirror"></i></a>
                                             </td>
                                         </tr>
                                         </tbody>
