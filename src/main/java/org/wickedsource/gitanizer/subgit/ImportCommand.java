@@ -6,6 +6,10 @@ import org.apache.commons.exec.PumpStreamHandler;
 
 import java.io.IOException;
 
+/**
+ * Wrapper around the subgit import command that allows to create a local git mirror of a remote
+ * SVN repository.
+ */
 public class ImportCommand extends SubgitCommand {
 
     private String sourceSvnUrl;
@@ -73,5 +77,11 @@ public class ImportCommand extends SubgitCommand {
         return errorListenerOutputStream;
     }
 
-
+    @Override
+    public String toString() {
+        return "ImportCommand{" +
+                "sourceSvnUrl='" + sourceSvnUrl + '\'' +
+                ", targetGitPath='" + targetGitPath + '\'' +
+                '}';
+    }
 }

@@ -19,7 +19,9 @@ import org.springframework.web.context.WebApplicationContext;
         DirtiesContextTestExecutionListener.class,
         TransactionDbUnitTestExecutionListener.class})
 @SpringBootTest(classes = GitanizerApplication.class, properties = {
-        "gitanizer.now=2016-11-27T12:00:00"
+        "gitanizer.now=2016-11-27T12:00:00",
+        "gitanizer.workdir=gitanizerWorkdir",
+        "gitanizer.subgit.executable.path=foobar"
 })
 @WebAppConfiguration
 public abstract class ControllerTestTemplate {

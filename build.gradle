@@ -64,6 +64,10 @@ bootRun {
     classpath = sourceSets.main.runtimeClasspath + configurations.dev
     jvmArgs =
             [
+                    // application configuration
+                    "-Dgitanizer.workdir=D:\\gitanizer",
+                    "-Dgitanizer.subgit.executable.path=D:\\programs\\subgit-3.2.2\\bin\\subgit.bat",
+
                     // debugging
                     "-Xdebug",
                     "-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005",

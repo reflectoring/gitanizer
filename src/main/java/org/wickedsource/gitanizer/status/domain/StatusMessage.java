@@ -1,8 +1,14 @@
 package org.wickedsource.gitanizer.status.domain;
 
+import org.wickedsource.gitanizer.mirror.domain.Mirror;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * This entity contains a single status message for a repository mirror. A status message describes
+ * a point in time in the lifecycle of a repository mirror.
+ */
 @Entity
 @Table
 public class StatusMessage {
@@ -12,13 +18,13 @@ public class StatusMessage {
     private int id;
 
     @Column
-    private StatusMessageType type;
-
-    @Column
     private String message;
 
     @Column
     private LocalDateTime timestamp;
+
+    @ManyToOne
+    private Mirror mirror;
 
     public int getId() {
         return id;
@@ -26,14 +32,6 @@ public class StatusMessage {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public StatusMessageType getType() {
-        return type;
-    }
-
-    public void setType(StatusMessageType type) {
-        this.type = type;
     }
 
     public String getMessage() {
@@ -50,5 +48,13 @@ public class StatusMessage {
 
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public Mirror getMirror() {
+        return mirror;
+    }
+
+    public void setMirror(Mirror mirror) {
+        this.mirror = mirror;
     }
 }

@@ -7,6 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.wickedsource.gitanizer.mirror.domain.Mirror;
 import org.wickedsource.gitanizer.mirror.domain.MirrorRepository;
+import org.wickedsource.gitanizer.status.domain.StatusMessage;
+import org.wickedsource.gitanizer.status.domain.StatusMessageRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +19,12 @@ public class ListMirrorsController {
 
     private MirrorRepository mirrorRepository;
 
+    private StatusMessageRepository statusMessageRepository;
+
     @Autowired
-    public ListMirrorsController(MirrorRepository mirrorRepository) {
+    public ListMirrorsController(MirrorRepository mirrorRepository, StatusMessageRepository statusMessageRepository) {
         this.mirrorRepository = mirrorRepository;
+        this.statusMessageRepository = statusMessageRepository;
     }
 
     @GetMapping({"/", "/mirrors/list"})
@@ -28,13 +33,18 @@ public class ListMirrorsController {
 
         List<MirrorDTO> mirrorDTOs = new ArrayList<>();
         for (Mirror mirror : mirrors) {
+            // Attention! Query within a loop. Should be included in the outer query for better performance if too slow.
+            StatusMessage lastStatusMessage = statusMessageRepository.findTop1ByMirrorIdOrderByTimestampDesc(mirror.getId());
             MirrorDTO dto = new MirrorDTO();
             dto.setId(mirror.getId());
             dto.setName(mirror.getName());
             dto.setLastChangeDate(mirror.getLastUpdated());
             dto.setSyncStatus(mirror.isSyncStatus());
-            // TODO: add latest status message
-            dto.setLastStatusMessage("Test");
+            if (lastStatusMessage == null) {
+                dto.setLastStatusMessage("No status yet");
+            } else {
+                dto.setLastStatusMessage(lastStatusMessage.getMessage());
+            }
             mirrorDTOs.add(dto);
         }
 

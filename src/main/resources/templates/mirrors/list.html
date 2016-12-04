@@ -64,11 +64,11 @@
                                             <td th:text="${mirror.lastStatusMessage}">Import Progress 99%</td>
                                             <td>
                                                 <a th:if="${mirror.syncStatus == false}" class="btn btn-default"
-                                                   th:href="@{/mirrors/{id}/continue(id=${mirror.id})}"><i
+                                                   th:href="@{/mirrors/{id}/sync/start(id=${mirror.id})}"><i
                                                         class="fa fa-play"
                                                         title="Start / Continue Synchronization for this Mirror"></i></a>
                                                 <a th:if="${mirror.syncStatus == true}" class="btn btn-default"
-                                                   th:href="@{/mirrors/{id}/pause(id=${mirror.id})}"><i
+                                                   th:href="@{/mirrors/{id}/sync/stop(id=${mirror.id})}"><i
                                                         class="fa fa-pause"
                                                         title="Pause Synchronization for this Mirror"></i></a>
                                                 <a class="btn btn-default"
