@@ -3,5 +3,5 @@
     <status_message/>
 
     <mirror id="1" name="coderadar" remote_svn_url="http://coderadar.git" last_updated="2016-11-27 12:00:00"
-            sync_status="false"/>
+            sync_active="false"/>
 </dataset>

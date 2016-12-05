@@ -6,14 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.wickedsource.gitanizer.core.ResourceNotFoundException;
-import org.wickedsource.gitanizer.core.SubgitConfiguration;
-import org.wickedsource.gitanizer.core.WorkdirConfiguration;
 import org.wickedsource.gitanizer.mirror.domain.Mirror;
 import org.wickedsource.gitanizer.mirror.domain.MirrorRepository;
-import org.wickedsource.gitanizer.status.domain.StatusMessageService;
-import org.wickedsource.gitanizer.subgit.ImportCommand;
-
-import java.nio.file.Path;
 
 @Controller
 @Transactional
@@ -21,50 +15,53 @@ public class SynchronizeMirrorController {
 
     private MirrorRepository mirrorRepository;
 
-    private WorkdirConfiguration workdirConfiguration;
-
-    private SubgitConfiguration subgitConfiguration;
-
-    private ImportCommandRunner importCommandRunner;
-
-    private StatusMessageService statusMessageService;
+    private SubgitImportService subgitImportService;
 
     @Autowired
-    public SynchronizeMirrorController(MirrorRepository mirrorRepository, WorkdirConfiguration workdirConfiguration, SubgitConfiguration subgitConfiguration, ImportCommandRunner importCommandRunner, StatusMessageService statusMessageService) {
+    public SynchronizeMirrorController(MirrorRepository mirrorRepository, SubgitImportService subgitImportService) {
         this.mirrorRepository = mirrorRepository;
-        this.workdirConfiguration = workdirConfiguration;
-        this.subgitConfiguration = subgitConfiguration;
-        this.importCommandRunner = importCommandRunner;
-        this.statusMessageService = statusMessageService;
+        this.subgitImportService = subgitImportService;
     }
 
     /**
      * Starts or resumes the synchronization of a remote SVN repository into a local git repository.
      *
-     * @param id ID of the mirror entity into which to synchronize.
+     * @param id ID of the mirror entity for which to start synchronization.
      * @return redirect to the mirror list view.
      */
     @GetMapping("/mirrors/{id}/sync/start")
     public String startSynchronization(@PathVariable long id) {
-        // TODO: only start if not started yet!
         Mirror mirror = mirrorRepository.findOne(id);
         if (mirror == null) {
             throw new ResourceNotFoundException();
         }
 
-        Path subgitPath = subgitConfiguration.getSubgitExecutable();
-        Path workdir = workdirConfiguration.getSubWorkdir(mirror.getName());
+        if (!subgitImportService.isImportRunning(mirror.getId())) {
+            subgitImportService.startImport(mirror);
+        }
 
-        StatusMessageListener listener = new StatusMessageListener(mirror.getId(), statusMessageService);
+        mirror.setSyncActive(true);
+        return "redirect:/mirrors/list";
+    }
 
-        ImportCommand importCommand = new ImportCommand(subgitPath.toString())
-                .withTargetGitPath(workdir.toString())
-                .withSourceSvnUrl(mirror.getRemoteSvnUrl().toString())
-                .withListener(listener);
+    /**
+     * Stops the SVN to GIT synchronization for the Mirror with the specified ID.
+     *
+     * @param id ID of the Mirror whose synchronization to stop.
+     * @return redirect to the mirror list view.
+     */
+    @GetMapping("/mirrors/{id}/sync/stop")
+    public String stopSynchronization(@PathVariable long id) {
+        Mirror mirror = mirrorRepository.findOne(id);
+        if (mirror == null) {
+            throw new ResourceNotFoundException();
+        }
 
-        statusMessageService.syncStarted(mirror.getId());
-        importCommandRunner.runImportCommand(importCommand, mirror.getId());
-        mirror.setSyncStatus(true);
+        if (subgitImportService.isImportRunning(mirror.getId())) {
+            subgitImportService.cancelImport(mirror.getId());
+        }
+
+        mirror.setSyncActive(false);
         return "redirect:/mirrors/list";
     }
 

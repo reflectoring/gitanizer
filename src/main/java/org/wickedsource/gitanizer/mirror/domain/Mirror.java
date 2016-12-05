@@ -4,6 +4,10 @@ import javax.persistence.*;
 import java.net.URL;
 import java.time.LocalDateTime;
 
+/**
+ * A Mirror entity contains coordinates to a remote SVN repository and information on a GIT repository
+ * into which the SVN remote should be imported.
+ */
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class Mirror {
@@ -22,7 +26,7 @@ public class Mirror {
     private LocalDateTime lastUpdated;
 
     @Column(nullable = false)
-    private boolean syncStatus;
+    private boolean syncActive;
 
     public long getId() {
         return id;
@@ -56,11 +60,11 @@ public class Mirror {
         this.lastUpdated = lastUpdated;
     }
 
-    public boolean isSyncStatus() {
-        return syncStatus;
+    public boolean isSyncActive() {
+        return syncActive;
     }
 
-    public void setSyncStatus(boolean syncStatus) {
-        this.syncStatus = syncStatus;
+    public void setSyncActive(boolean syncActive) {
+        this.syncActive = syncActive;
     }
 }

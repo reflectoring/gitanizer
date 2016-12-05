@@ -67,6 +67,7 @@ bootRun {
                     // application configuration
                     "-Dgitanizer.workdir=D:\\gitanizer",
                     "-Dgitanizer.subgit.executable.path=D:\\programs\\subgit-3.2.2\\bin\\subgit.bat",
+                    "-Dgitanizer.importTasks.maxThreads=5",
 
                     // debugging
                     "-Xdebug",

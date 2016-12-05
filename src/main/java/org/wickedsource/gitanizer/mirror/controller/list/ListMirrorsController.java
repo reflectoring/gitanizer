@@ -27,6 +27,9 @@ public class ListMirrorsController {
         this.statusMessageRepository = statusMessageRepository;
     }
 
+    /**
+     * Shows a view listing all registered Mirrors.
+     */
     @GetMapping({"/", "/mirrors/list"})
     public String listMirrors(Model model) {
         Iterable<Mirror> mirrors = mirrorRepository.findAll();
@@ -39,7 +42,7 @@ public class ListMirrorsController {
             dto.setId(mirror.getId());
             dto.setName(mirror.getName());
             dto.setLastChangeDate(mirror.getLastUpdated());
-            dto.setSyncStatus(mirror.isSyncStatus());
+            dto.setSyncStatus(mirror.isSyncActive());
             if (lastStatusMessage == null) {
                 dto.setLastStatusMessage("No status yet");
             } else {

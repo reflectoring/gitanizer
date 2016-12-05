@@ -49,7 +49,16 @@ public class StatusMessageService {
      * @param mirrorId ID of the mirror for which to store the status message.
      */
     public void upToDate(Long mirrorId) {
-        saveMessage(mirrorId, "Synchronization up-to-date.");
+        saveMessage(mirrorId, "Mirror is up-to-date.");
+    }
+
+    /**
+     * Save a status message that describes that the synchronization process is currently paused.
+     *
+     * @param mirrorId ID of the mirror for which to store the status message.
+     */
+    public void paused(Long mirrorId) {
+        saveMessage(mirrorId, "Synchronization paused.");
     }
 
     /**
