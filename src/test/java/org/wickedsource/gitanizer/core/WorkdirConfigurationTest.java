@@ -16,11 +16,18 @@ public class WorkdirConfigurationTest {
         new WorkdirConfiguration(environment);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void failOnInvalidPath() {
-        MockEnvironment environment = new MockEnvironment();
-        environment.setProperty("gitanizer.workdir", "oihtpß927t,;<>|gpsdn?`!?§?$)§");
-        new WorkdirConfiguration(environment);
+        if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+            try {
+                MockEnvironment environment = new MockEnvironment();
+                environment.setProperty("gitanizer.workdir", "oihtpß927t,;<>|gpsdn?`!?§?$)§");
+                new WorkdirConfiguration(environment);
+                Assert.fail("Expecting an IllegalArgumentException under Windows!");
+            } catch (IllegalArgumentException e) {
+                // expected exception
+            }
+        }
     }
 
     @Test
