@@ -19,7 +19,7 @@ public class WorkdirConfigurationTest {
     @Test(expected = IllegalArgumentException.class)
     public void failOnInvalidPath() {
         MockEnvironment environment = new MockEnvironment();
-        environment.setProperty("gitanizer.workdir", "oihtpß927tgpsdn?`!?§?$)§");
+        environment.setProperty("gitanizer.workdir", "oihtpß927t,;<>|gpsdn?`!?§?$)§");
         new WorkdirConfiguration(environment);
     }
 
