@@ -1,0 +1,41 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/layout">
+
+<th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/codemirror/css/codemirror.css}"/>
+</th:block>
+
+
+<th:block layout:fragment="content">
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Import Log for <span th:text="${mirror.name}" th:remove="tag"></span></h3>
+                    </div>
+
+                    <div class="box-body no-padding">
+                        <textarea id="logarea"><span th:text="${mirror.log}" th:remove="tag"></span>
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</th:block>
+
+<th:block layout:fragment="js">
+    <script th:src="@{/codemirror/js/codemirror.js}"></script>
+    <script language="javascript">
+        var textarea = document.getElementById("logarea");
+        var editor = CodeMirror.fromTextArea(textarea, {
+            lineNumbers: true,
+            readOnly: true
+        });
+    </script>
+</th:block>
+
+</html>

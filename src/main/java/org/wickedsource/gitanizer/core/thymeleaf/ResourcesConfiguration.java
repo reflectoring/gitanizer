@@ -16,6 +16,7 @@ public class ResourcesConfiguration extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/AdminLTE/**").addResourceLocations("classpath:/AdminLTE/");
         registry.addResourceHandler("/jQuery/**").addResourceLocations("classpath:/jQuery/");
         registry.addResourceHandler("/templates/**").addResourceLocations("classpath:/templates/");
+        registry.addResourceHandler("/codemirror/**").addResourceLocations("classpath:/codemirror/");
     }
 
     @Bean

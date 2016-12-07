@@ -5,6 +5,9 @@ import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.PumpStreamHandler;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Wrapper around the subgit import command that allows to create a local git mirror of a remote
@@ -19,6 +22,8 @@ public class ImportCommand extends SubgitCommand {
     private String username;
 
     private String password;
+
+    private OutputStream out;
 
     private ImportCommandListener listener;
 
@@ -51,6 +56,18 @@ public class ImportCommand extends SubgitCommand {
         return this;
     }
 
+    /**
+     * Registers an OutputStream that receives all Output from subgit during the
+     * import process. Can be used to create a log file of the import process.
+     *
+     * @param out the OutputStream to receive the output.
+     * @return this object for chaining.
+     */
+    public ImportCommand withLogOutputStream(OutputStream out) {
+        this.out = out;
+        return this;
+    }
+
     public void execute() throws IOException {
         CommandLine commandLine = new CommandLine(getSubgitPath());
         commandLine.addArgument("import");
@@ -62,18 +79,31 @@ public class ImportCommand extends SubgitCommand {
         executor.setStreamHandler(new PumpStreamHandler(
                 getProgressListener(this.listener),
                 getErrorListener(this.listener)));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+
+        if (this.out != null) {
+            out.write("----------------------\r\n".getBytes());
+            out.write(String.format("%s - Starting subgit import run\r\n", formatter.format(LocalDateTime.now())).getBytes());
+        }
         executor.execute(commandLine);
+        if (this.out != null) {
+            out.write(String.format("%s - Finished subgit import run\r\n", formatter.format(LocalDateTime.now())).getBytes());
+            out.write("----------------------\r\n".getBytes());
+        }
     }
 
     private ProgressListenerOutputStream getProgressListener(ImportCommandListener listener) {
         ProgressListenerOutputStream progressListenerOutputStream = new ProgressListenerOutputStream();
         progressListenerOutputStream.registerProgressListener(listener);
+        progressListenerOutputStream.registerOutputStream(this.out);
         return progressListenerOutputStream;
     }
 
     private ErrorListenerOutputStream getErrorListener(ImportCommandListener listener) {
         ErrorListenerOutputStream errorListenerOutputStream = new ErrorListenerOutputStream();
         errorListenerOutputStream.registerErrorListener(listener);
+        errorListenerOutputStream.registerOutputStream(this.out);
         return errorListenerOutputStream;
     }
 

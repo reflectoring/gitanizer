@@ -19,8 +19,13 @@ public class ProgressListenerOutputStream extends OutputStream {
 
     private List<ImportCommandListener> progressListeners = new ArrayList<>();
 
+    private OutputStream out;
+
     @Override
     public void write(int b) throws IOException {
+        if (this.out != null) {
+            this.out.write(b);
+        }
         currentContent.append(new String(new byte[]{(byte) b}));
         Matcher matcher = PROGRESS_PATTERN.matcher(currentContent);
         if (matcher.find()) {
@@ -38,5 +43,14 @@ public class ProgressListenerOutputStream extends OutputStream {
      */
     public void registerProgressListener(ImportCommandListener progressListener) {
         this.progressListeners.add(progressListener);
+    }
+
+    /**
+     * Registers an OutputStream that receives all output written into this ProgessListenerOutputStream.
+     *
+     * @param out the OutputStream to copy all output into.
+     */
+    public void registerOutputStream(OutputStream out) {
+        this.out = out;
     }
 }

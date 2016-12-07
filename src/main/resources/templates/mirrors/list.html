@@ -1,109 +1,62 @@
-<!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
+<html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="layouts/layout">
-<head>
-    <meta charset="UTF-8"/>
-    <title>HELLO WORLD</title>
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css"/>
-    <link rel="stylesheet" href="AdminLTE/css/AdminLTE.min.css"/>
-    <link rel="stylesheet" href="AdminLTE/css/skins/skin-red.min.css"/>
-</head>
-<body class="hold-transition skin-red layout-top-nav">
-<div class="wrapper">
+<th:block layout:fragment="content">
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Registered Subversion Repository Mirrors </h3>
+                        <a th:href="@{/mirrors/create}" type="button" class="btn btn-primary pull-right"
+                           style="margin-right: 5px;">
+                            <i class="fa fa-plus"></i> Add a new Mirror
+                        </a>
 
-    <header class="main-header">
-        <nav class="navbar navbar-static-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <a href="/" class="navbar-brand"><b>git</b>anizer</a>
-                </div>
-
-                <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
-                    <ul class="nav navbar-nav">
-                    </ul>
-                </div>
-
-            </div>
-        </nav>
-    </header>
-
-    <div class="content-wrapper">
-        <div class="container">
-
-
-            <th:block layout:fragment="content">
-                <section class="content">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="box">
-                                <div class="box-header">
-                                    <h3 class="box-title">Registered Subversion Repository Mirrors </h3>
-                                    <a th:href="@{/mirrors/create}" type="button" class="btn btn-primary pull-right"
-                                       style="margin-right: 5px;">
-                                        <i class="fa fa-plus"></i> Add a new Mirror
-                                    </a>
-
-                                </div>
-                                <!-- /.box-header -->
-                                <div class="box-body table-responsive no-padding">
-                                    <table class="table table-hover">
-                                        <tbody>
-                                        <tr>
-                                            <th>Repository</th>
-                                            <th>Last Change</th>
-                                            <th>Last Status Message</th>
-                                            <th>Options</th>
-                                        </tr>
-                                        <tr th:each="mirror : ${mirrors}">
-                                            <td th:text="${mirror.name}">/gitanizer.git</td>
-                                            <td th:text="${mirror.lastChangeDate}">11-7-2014</td>
-                                            <td th:text="${mirror.lastStatusMessage}">Import Progress 99%</td>
-                                            <td>
-                                                <a th:if="${mirror.syncStatus == false}" class="btn btn-default"
-                                                   th:href="@{/mirrors/{id}/sync/start(id=${mirror.id})}"><i
-                                                        class="fa fa-play"
-                                                        title="Start / Continue Synchronization for this Mirror"></i></a>
-                                                <a th:if="${mirror.syncStatus == true}" class="btn btn-default"
-                                                   th:href="@{/mirrors/{id}/sync/stop(id=${mirror.id})}"><i
-                                                        class="fa fa-pause"
-                                                        title="Pause Synchronization for this Mirror"></i></a>
-                                                <a class="btn btn-default"
-                                                   th:href="@{/mirrors/{id}/update(id=${mirror.id})}"><i
-                                                        class="fa fa-edit" title="Edit Mirror"></i></a>
-                                                <a class="btn btn-default"
-                                                   th:href="@{/mirrors/{id}/delete(id=${mirror.id})}"><i
-                                                        class="fa fa-trash" title="Delete Mirror"></i></a>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
                     </div>
-                </section>
-            </th:block>
-
-
-        </div>
-
-    </div>
-
-    <footer class="main-footer">
-        <div class="container">
-            <div class="pull-right hidden-xs">
-                <b>gitanizer version</b> @gitanizer.version@
+                    <!-- /.box-header -->
+                    <div class="box-body table-responsive no-padding">
+                        <table class="table table-hover">
+                            <tbody>
+                            <tr>
+                                <th>Repository</th>
+                                <th>Last Change</th>
+                                <th>Last Status Message</th>
+                                <th>Options</th>
+                            </tr>
+                            <tr th:each="mirror : ${mirrors}">
+                                <td th:text="${mirror.name}">/gitanizer.git</td>
+                                <td th:text="${mirror.lastChangeDate}">11-7-2014</td>
+                                <td th:text="${mirror.lastStatusMessage}">Import Progress 99%</td>
+                                <td>
+                                    <a th:if="${mirror.syncStatus == false}" class="btn btn-default"
+                                       th:href="@{/mirrors/{id}/sync/start(id=${mirror.id})}"><i
+                                            class="fa fa-play"
+                                            title="Start / Continue Synchronization for this Mirror"></i></a>
+                                    <a th:if="${mirror.syncStatus == true}" class="btn btn-default"
+                                       th:href="@{/mirrors/{id}/sync/stop(id=${mirror.id})}"><i
+                                            class="fa fa-pause"
+                                            title="Pause Synchronization for this Mirror"></i></a>
+                                    <a class="btn btn-default"
+                                       th:href="@{/mirrors/{id}/log(id=${mirror.id})}"><i
+                                            class="fa fa-terminal"
+                                            title="View log file of previous import runs."></i></a>
+                                    <a class="btn btn-default"
+                                       th:href="@{/mirrors/{id}/update(id=${mirror.id})}"><i
+                                            class="fa fa-edit" title="Edit Mirror"></i></a>
+                                    <a class="btn btn-default"
+                                       th:href="@{/mirrors/{id}/delete(id=${mirror.id})}"><i
+                                            class="fa fa-trash" title="Delete Mirror"></i></a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
-    </footer>
-</div>
+    </section>
+</th:block>
 
-<script src="jQuery/jquery-2.2.3.min.js"></script>
-<script src="bootstrap/js/bootstrap.min.js"></script>
-<script src="AdminLTE/js/app.min.js"></script>
-</body>
+
 </html>
