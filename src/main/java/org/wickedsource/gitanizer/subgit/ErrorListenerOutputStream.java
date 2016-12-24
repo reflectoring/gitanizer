@@ -51,6 +51,8 @@ public class ErrorListenerOutputStream extends OutputStream {
     @Override
     public void close() throws IOException {
         super.close();
-        out.close();
+        if (out != null) {
+            out.close();
+        }
     }
 }
