@@ -47,4 +47,10 @@ public class ErrorListenerOutputStream extends OutputStream {
     public void registerOutputStream(OutputStream out) {
         this.out = out;
     }
+
+    @Override
+    public void close() throws IOException {
+        super.close();
+        out.close();
+    }
 }

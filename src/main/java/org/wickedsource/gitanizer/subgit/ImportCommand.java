@@ -64,7 +64,7 @@ public class ImportCommand extends SubgitCommand {
      * @return this object for chaining.
      */
     public ImportCommand withLogOutputStream(OutputStream out) {
-        this.out = out;
+        this.out = new NewlineAfterProgressBarOutputStream(out);
         return this;
     }
 
