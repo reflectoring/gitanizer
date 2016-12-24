@@ -2,12 +2,18 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="layouts/layout">
 <th:block layout:fragment="content">
+    <section class="content-header">
+        <h1>Mirror Overview</h1>
+        <ol class="breadcrumb">
+            <li><a th:href="@{/mirrors/list}">Home</a></li>
+            <li class="active">Mirror Overview</li>
+        </ol>
+    </section>
     <section class="content">
         <div class="row">
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Registered Subversion Repository Mirrors </h3>
                         <a th:href="@{/mirrors/create}" type="button" class="btn btn-primary pull-right"
                            style="margin-right: 5px;">
                             <i class="fa fa-plus"></i> Add a new Mirror
@@ -39,7 +45,7 @@
                                             title="Pause Synchronization for this Mirror"></i></a>
                                     <a class="btn btn-default"
                                        th:href="@{/mirrors/{id}/log(id=${mirror.id})}"><i
-                                            class="fa fa-terminal"
+                                            class="fa fa-history"
                                             title="View log file of previous import runs."></i></a>
                                     <a class="btn btn-default"
                                        th:href="@{/mirrors/{id}/update(id=${mirror.id})}"><i

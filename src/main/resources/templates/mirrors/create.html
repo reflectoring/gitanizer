@@ -4,6 +4,14 @@
       layout:decorator="layouts/layout">
 
 <th:block layout:fragment="content">
+    <section class="content-header">
+        <h1>Create Mirror</h1>
+        <ol class="breadcrumb">
+            <li><a th:href="@{/mirrors/list}">Home</a></li>
+            <li><a th:href="@{/mirrors/list}">Mirror Overview</a></li>
+            <li class="active">Create Mirror</li>
+        </ol>
+    </section>
     <section class="content">
         <div class="row">
             <div class="col-xs-12">
