@@ -15,7 +15,7 @@ public class DeleteMirrorControllerTest extends ControllerTestTemplate {
     @ExpectedDatabase("/empty.xml")
     public void deleteMirror() throws Exception {
         mvc().perform(get("/mirrors/1/delete"))
-                .andExpect(status().isOk());
+                .andExpect(status().is3xxRedirection());
     }
 
 }
