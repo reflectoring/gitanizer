@@ -21,7 +21,7 @@ public class DeleteMirrorController {
     @GetMapping("/mirrors/{id}/delete")
     public String deleteMirror(@PathVariable long id) {
         mirrorRepository.delete(id);
-        return "/mirrors/list";
+        return "redirect:/mirrors/list";
     }
 
 }
