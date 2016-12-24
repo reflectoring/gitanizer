@@ -28,6 +28,9 @@ public class Mirror {
     @Column(nullable = false)
     private boolean syncActive;
 
+    @Column
+    private String lastStatusMessage;
+
     public long getId() {
         return id;
     }
@@ -66,5 +69,13 @@ public class Mirror {
 
     public void setSyncActive(boolean syncActive) {
         this.syncActive = syncActive;
+    }
+
+    public String getLastStatusMessage() {
+        return lastStatusMessage;
+    }
+
+    public void setLastStatusMessage(String lastStatusMessage) {
+        this.lastStatusMessage = lastStatusMessage;
     }
 }

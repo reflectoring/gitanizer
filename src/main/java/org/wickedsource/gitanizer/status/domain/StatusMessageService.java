@@ -10,13 +10,10 @@ import java.time.LocalDateTime;
 @Service
 public class StatusMessageService {
 
-    private final StatusMessageRepository statusMessageRepository;
-
     private final MirrorRepository mirrorRepository;
 
     @Autowired
-    public StatusMessageService(StatusMessageRepository statusMessageRepository, MirrorRepository mirrorRepository) {
-        this.statusMessageRepository = statusMessageRepository;
+    public StatusMessageService(MirrorRepository mirrorRepository) {
         this.mirrorRepository = mirrorRepository;
     }
 
@@ -73,11 +70,9 @@ public class StatusMessageService {
 
     private void saveMessage(Long mirrorId, String message) {
         Mirror mirror = mirrorRepository.findOne(mirrorId);
-        StatusMessage statusMessage = new StatusMessage();
-        statusMessage.setTimestamp(LocalDateTime.now());
-        statusMessage.setMessage(message);
-        statusMessage.setMirror(mirror);
-        statusMessageRepository.save(statusMessage);
+        mirror.setLastUpdated(LocalDateTime.now());
+        mirror.setLastStatusMessage(message);
+        mirrorRepository.save(mirror);
     }
 
 }
