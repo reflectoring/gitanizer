@@ -1,9 +1,7 @@
-package org.wickedsource.gitanizer.status.domain;
+package org.wickedsource.gitanizer.mirror.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.wickedsource.gitanizer.mirror.domain.Mirror;
-import org.wickedsource.gitanizer.mirror.domain.MirrorRepository;
 
 import java.time.LocalDateTime;
 

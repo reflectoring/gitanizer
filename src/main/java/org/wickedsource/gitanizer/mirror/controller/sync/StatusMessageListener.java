@@ -1,6 +1,6 @@
 package org.wickedsource.gitanizer.mirror.controller.sync;
 
-import org.wickedsource.gitanizer.status.domain.StatusMessageService;
+import org.wickedsource.gitanizer.mirror.domain.StatusMessageService;
 import org.wickedsource.gitanizer.subgit.ImportCommandListener;
 
 /**

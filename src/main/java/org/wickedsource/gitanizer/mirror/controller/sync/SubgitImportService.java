@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.wickedsource.gitanizer.core.SubgitConfiguration;
 import org.wickedsource.gitanizer.core.WorkdirConfiguration;
 import org.wickedsource.gitanizer.mirror.domain.Mirror;
-import org.wickedsource.gitanizer.status.domain.StatusMessageService;
+import org.wickedsource.gitanizer.mirror.domain.StatusMessageService;
 import org.wickedsource.gitanizer.subgit.ImportCommand;
 
 import javax.annotation.PreDestroy;
