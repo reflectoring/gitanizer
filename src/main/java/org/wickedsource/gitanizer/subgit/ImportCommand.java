@@ -82,14 +82,18 @@ public class ImportCommand extends SubgitCommand {
 
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-        if (this.out != null) {
-            out.write("----------------------\r\n".getBytes());
-            out.write(String.format("%s - Starting subgit import run\r\n", formatter.format(LocalDateTime.now())).getBytes());
-        }
-        executor.execute(commandLine);
-        if (this.out != null) {
-            out.write(String.format("%s - Finished subgit import run\r\n", formatter.format(LocalDateTime.now())).getBytes());
-            out.write("----------------------\r\n".getBytes());
+        try {
+            if (this.out != null) {
+                out.write("----------------------\r\n".getBytes());
+                out.write(String.format("%s - Starting subgit import run\r\n", formatter.format(LocalDateTime.now())).getBytes());
+            }
+            executor.execute(commandLine);
+            if (this.out != null) {
+                out.write(String.format("%s - Finished subgit import run\r\n", formatter.format(LocalDateTime.now())).getBytes());
+                out.write("----------------------\r\n".getBytes());
+            }
+        } catch (Exception e) {
+            out.close();
         }
     }
 

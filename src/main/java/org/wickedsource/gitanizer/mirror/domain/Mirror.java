@@ -31,6 +31,9 @@ public class Mirror {
     @Column
     private String lastStatusMessage;
 
+    @Column
+    private String workdirName;
+
     public long getId() {
         return id;
     }
@@ -77,5 +80,13 @@ public class Mirror {
 
     public void setLastStatusMessage(String lastStatusMessage) {
         this.lastStatusMessage = lastStatusMessage;
+    }
+
+    public String getWorkdirName() {
+        return workdirName;
+    }
+
+    public void setWorkdirName(String workdirName) {
+        this.workdirName = workdirName;
     }
 }

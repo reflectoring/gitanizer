@@ -1,5 +1,6 @@
 package org.wickedsource.gitanizer.mirror.controller.sync;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,15 +43,13 @@ public class SubgitImportService {
 
     private ExecutorService executor;
 
-    private Map<Long, Future> taskMap = new HashMap<>();
+    private Map<Long, ImportTask> taskMap = new HashMap<>();
 
     private SubgitConfiguration subgitConfiguration;
 
     private WorkdirConfiguration workdirConfiguration;
 
     private CounterService counterService;
-
-    private GaugeService gaugeService;
 
     private Logger logger = LoggerFactory.getLogger(SubgitImportService.class);
 
@@ -62,7 +61,6 @@ public class SubgitImportService {
         this.subgitConfiguration = subgitConfiguration;
         this.workdirConfiguration = workdirConfiguration;
         this.counterService = counterService;
-        this.gaugeService = gaugeService;
         int maxParallelTasks = MAX_THREADS_DEFAULT;
         String maxParallelTasksString = environment.getProperty("gitanizer.importTasks.maxThreads");
         if (maxParallelTasksString != null) {
@@ -73,18 +71,33 @@ public class SubgitImportService {
             }
         }
         this.executor = Executors.newFixedThreadPool(maxParallelTasks);
-        this.gaugeService.submit(GAUGE_MAX_PARALLEL_TASKS, maxParallelTasks);
+        initMetrics(counterService, gaugeService, maxParallelTasks);
+    }
+
+    private void initMetrics(CounterService counterService, GaugeService gaugeService, int maxParallelTasks) {
+        gaugeService.submit(GAUGE_MAX_PARALLEL_TASKS, maxParallelTasks);
+        // incrementing and decrementing counters once to initialize them to 0
+        counterService.increment(COUNTER_ACTIVE_TASKS);
+        counterService.decrement(COUNTER_ACTIVE_TASKS);
+        counterService.increment(COUNTER_QUEUED_TASKS);
+        counterService.decrement(COUNTER_QUEUED_TASKS);
     }
 
     /**
      * Starts or resumes the subgit import of a remote SVN. Runs asynchronously since it may take a while. The started
-     * import task can be cancelled by calling {@link #cancelImport(Long)} with the ID of the mirror.
+     * import task can be cancelled by calling {@link #cancelImport(Long)} with the ID of the mirror. Exposes the following
+     * metrics to Spring Boot Actuator:
+     * <ul>
+     * <li><strong>gitanizer.counter.importTasks.currentlyActive:</strong> number of currently running import tasks</li>
+     * <li><strong>gitanizer.counter.importTasks.currentlyQueued:</strong> number of currently queued import tasks that are waiting for a free slot</li>
+     * <li><strong>gitanizer.gauge.importTasks.maxParallel:</strong> number of import tasks that are allowed to run in parallel</li>
+     * </ul>
      *
      * @param mirror the Mirror object for which to start the subgit import.
      */
     public void startImport(Mirror mirror) {
         Path subgitPath = subgitConfiguration.getSubgitExecutable();
-        Path workdir = workdirConfiguration.getSubWorkdir(mirror.getName());
+        Path workdir = workdirConfiguration.getSubWorkdir(mirror.getWorkdirName());
 
         try {
             StatusMessageListener listener = new StatusMessageListener(mirror.getId(), statusMessageService);
@@ -108,12 +121,14 @@ public class SubgitImportService {
                     counterService.decrement(COUNTER_ACTIVE_TASKS);
                     logOutputStream.close();
                 } catch (IOException e) {
-                    throw new IllegalStateException(String.format("IOException during async execution of subgit import command: %s", importCommand), e);
+                    String message = String.format("IOException during async execution of subgit import command: %s", importCommand);
+                    logger.error(message);
+                    throw new IllegalStateException(message, e);
                 }
             };
 
             Future future = executor.submit(task);
-            taskMap.put(mirror.getId(), future);
+            taskMap.put(mirror.getId(), new ImportTask(future, logOutputStream));
             counterService.increment(COUNTER_QUEUED_TASKS);
         } catch (IOException e) {
             throw new IllegalStateException("Error writing import log into file!");
@@ -127,7 +142,7 @@ public class SubgitImportService {
      * @return Path object pointing to the logfile.
      */
     public Path getLogFile(Mirror mirror) {
-        Path workdir = workdirConfiguration.getSubWorkdir(mirror.getName());
+        Path workdir = workdirConfiguration.getSubWorkdir(mirror.getWorkdirName());
         String logFileName = String.format("%s/subgit-import.log", workdir);
         return Paths.get(logFileName);
     }
@@ -139,9 +154,11 @@ public class SubgitImportService {
      * @param mirrorId ID of the mirror whose import to cancel.
      */
     public void cancelImport(Long mirrorId) {
-        Future future = taskMap.get(mirrorId);
+        ImportTask task = taskMap.get(mirrorId);
+        Future future = task.getFuture();
         if (future != null) {
             if (future.cancel(true)) {
+                IOUtils.closeQuietly(task.getLogOutputStream());
                 counterService.decrement(COUNTER_ACTIVE_TASKS);
                 statusMessageService.paused(mirrorId);
             }

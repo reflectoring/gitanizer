@@ -68,9 +68,12 @@ public class StatusMessageService {
 
     private void saveMessage(Long mirrorId, String message) {
         Mirror mirror = mirrorRepository.findOne(mirrorId);
-        mirror.setLastUpdated(LocalDateTime.now());
-        mirror.setLastStatusMessage(message);
-        mirrorRepository.save(mirror);
+        if (mirror != null) {
+            // mirror may be null when deleted
+            mirror.setLastUpdated(LocalDateTime.now());
+            mirror.setLastStatusMessage(message);
+            mirrorRepository.save(mirror);
+        }
     }
 
 }

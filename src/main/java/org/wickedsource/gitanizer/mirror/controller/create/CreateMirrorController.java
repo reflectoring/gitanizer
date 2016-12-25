@@ -15,6 +15,7 @@ import org.wickedsource.gitanizer.mirror.domain.MirrorRepository;
 import javax.validation.Valid;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.UUID;
 
 @Controller
 @Transactional
@@ -46,6 +47,7 @@ public class CreateMirrorController {
             mirror.setName(form.getRepositoryName());
             mirror.setRemoteSvnUrl(new URL(form.getRemoteSvnUrl()));
             mirror.setLastUpdated(dateProvider.now());
+            mirror.setWorkdirName(UUID.randomUUID().toString());
             mirrorRepository.save(mirror);
             return "redirect:/mirrors/list";
         } catch (MalformedURLException e) {

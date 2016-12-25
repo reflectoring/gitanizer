@@ -61,7 +61,7 @@ public class LogController {
 
             return "/mirrors/log";
         } catch (IOException e) {
-            throw new IllegalStateException("Error while accessing log file!", e);
+            throw new IllegalStateException("Error while accessing log file: " + e.getMessage(), e);
         }
     }
 
