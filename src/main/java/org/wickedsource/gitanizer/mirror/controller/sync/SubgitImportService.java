@@ -97,17 +97,19 @@ public class SubgitImportService {
      */
     public void startImport(Mirror mirror) {
         Path subgitPath = subgitConfiguration.getSubgitExecutable();
-        Path workdir = workdirConfiguration.getSubWorkdir(mirror.getWorkdirName());
+        Path workdir = workdirConfiguration.getWorkdir(mirror.getWorkdirName());
+        Path subgitDir = workdirConfiguration.getSubgitDir(mirror.getWorkdirName());
 
         try {
             StatusMessageListener listener = new StatusMessageListener(mirror.getId(), statusMessageService);
 
             OutputStream logOutputStream = new FileOutputStream(getLogFile(mirror).toFile(), true);
             ImportCommand importCommand = new ImportCommand(subgitPath.toString())
-                    .withTargetGitPath(workdir.toString())
+                    .withTargetGitPath(subgitDir.toString())
                     .withSourceSvnUrl(mirror.getRemoteSvnUrl().toString())
                     .withListener(listener)
-                    .withLogOutputStream(logOutputStream);
+                    .withLogOutputStream(logOutputStream)
+                    .withWorkingDirectory(workdir.toString());
 
             statusMessageService.syncStarted(mirror.getId());
 
@@ -118,12 +120,13 @@ public class SubgitImportService {
                     importCommand.execute();
                     statusMessageService.upToDate(mirror.getId());
                     taskMap.remove(mirror.getId());
-                    counterService.decrement(COUNTER_ACTIVE_TASKS);
                     logOutputStream.close();
-                } catch (IOException e) {
+                } catch (Exception e) {
                     String message = String.format("IOException during async execution of subgit import command: %s", importCommand);
                     logger.error(message);
                     throw new IllegalStateException(message, e);
+                } finally {
+                    counterService.decrement(COUNTER_ACTIVE_TASKS);
                 }
             };
 
@@ -142,7 +145,7 @@ public class SubgitImportService {
      * @return Path object pointing to the logfile.
      */
     public Path getLogFile(Mirror mirror) {
-        Path workdir = workdirConfiguration.getSubWorkdir(mirror.getWorkdirName());
+        Path workdir = workdirConfiguration.getWorkdir(mirror.getWorkdirName());
         String logFileName = String.format("%s/subgit-import.log", workdir);
         return Paths.get(logFileName);
     }

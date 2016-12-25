@@ -4,6 +4,7 @@ import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.PumpStreamHandler;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
@@ -26,6 +27,8 @@ public class ImportCommand extends SubgitCommand {
     private OutputStream out;
 
     private ImportCommandListener listener;
+
+    private String workingDirectory;
 
     public ImportCommand(String subgitPath) {
         super(subgitPath);
@@ -56,6 +59,11 @@ public class ImportCommand extends SubgitCommand {
         return this;
     }
 
+    public ImportCommand withWorkingDirectory(String workingDirectory) {
+        this.workingDirectory = workingDirectory;
+        return this;
+    }
+
     /**
      * Registers an OutputStream that receives all Output from subgit during the
      * import process. Can be used to create a log file of the import process.
@@ -76,6 +84,7 @@ public class ImportCommand extends SubgitCommand {
         commandLine.addArgument("--non-interactive");
         commandLine.addArgument(this.targetGitPath);
         DefaultExecutor executor = new DefaultExecutor();
+        executor.setWorkingDirectory(new File(this.workingDirectory));
         executor.setStreamHandler(new PumpStreamHandler(
                 getProgressListener(this.listener),
                 getErrorListener(this.listener)));

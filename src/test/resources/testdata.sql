@@ -1,4 +1,4 @@
-insert into mirror (id, name, workdir_name, remote_svn_url, last_updated, sync_active) values (1, 'Apache Commons IO', 'IO', 'https://svn.apache.org/repos/asf/commons/_moved_to_git/io/', '2016-12-04', '0');
-insert into mirror (id, name, workdir_name, remote_svn_url, last_updated, sync_active) values (2, 'Apache Commons HTTP', 'Commons', 'http://svn.apache.org/repos/asf/commons/dormant/http/', '2016-12-04', '0');
+insert into mirror (id, name, workdir_name, remote_svn_url, last_updated, sync_active) values (1, 'Apache Commons IO', 'commons-io', 'https://svn.apache.org/repos/asf/commons/_moved_to_git/io/', '2016-12-04', '0');
+insert into mirror (id, name, workdir_name, remote_svn_url, last_updated, sync_active) values (2, 'Apache Commons HTTP', 'commons-http', 'http://svn.apache.org/repos/asf/commons/dormant/http/', '2016-12-04', '0');
 insert into mirror (id, name, workdir_name, remote_svn_url, last_updated, sync_active) values (3, 'Apache HTTPD', 'httpd', 'http://svn.apache.org/repos/asf/httpd/httpd/', '2016-12-04', '0');
 insert into mirror (id, name, workdir_name, remote_svn_url, last_updated, sync_active) values (4, 'Apache POI', 'poi', 'http://svn.apache.org/repos/asf/poi/', '2016-12-04', '0');

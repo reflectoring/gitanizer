@@ -38,16 +38,20 @@ public class WorkdirConfiguration {
      * The name passed into this method is sanitized. If a sub directory with the sanitized name already exists,
      * the existing folder is returned. If it doesn't exist, a new folder is created and then returned.
      *
-     * @param name the name of the sub directory. Characters that are not allowed in file names are removed from it.
+     * @param workdirName the name of the sub directory. Characters that are not allowed in file names are removed from it.
      */
-    public Path getSubWorkdir(String name) {
-        String sanitizedFilename = sanitizeFilename(name);
+    public Path getWorkdir(String workdirName) {
+        String sanitizedFilename = sanitizeFilename(workdirName);
         if (sanitizedFilename.equals("")) {
             throw new IllegalArgumentException("The given filename must contain at least one character that is allowed in file names!");
         }
         Path subWorkdir = applicationWorkdir.resolve(sanitizedFilename);
         subWorkdir.toFile().mkdirs();
         return subWorkdir;
+    }
+
+    public Path getSubgitDir(String workdirName){
+        return getWorkdir(workdirName).resolve("git");
     }
 
     private String sanitizeFilename(String filename) {

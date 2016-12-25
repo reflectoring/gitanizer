@@ -37,7 +37,7 @@ public class WorkdirConfigurationTest {
         tempFile.deleteOnExit();
         environment.setProperty("gitanizer.workdir", tempFile.getAbsolutePath());
         WorkdirConfiguration workdirConfiguration = new WorkdirConfiguration(environment);
-        Path workdir = workdirConfiguration.getSubWorkdir("fooöäüß_-*()bar");
+        Path workdir = workdirConfiguration.getWorkdir("fooöäüß_-*()bar");
         Assert.assertEquals("foo_bar", workdir.toFile().getName());
     }
 

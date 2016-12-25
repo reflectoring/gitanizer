@@ -87,7 +87,7 @@ public class DeleteMirrorController {
         if (subgitImportService.isImportRunning(mirror.getId())) {
             subgitImportService.cancelImport(mirror.getId());
         }
-        Path workdir = workdirConfiguration.getSubWorkdir(mirror.getWorkdirName());
+        Path workdir = workdirConfiguration.getWorkdir(mirror.getWorkdirName());
         deleteWorkdirAsync(workdir);
         return "redirect:/mirrors/list";
     }
@@ -121,11 +121,12 @@ public class DeleteMirrorController {
                         deleteRecursively(workdir);
                     }
                 }
-                counterService.decrement(COUNTER_ACTIVE_TASKS);
-            } catch (IOException | InterruptedException e) {
+            } catch (Exception e) {
                 String message = String.format("Exception during async deletion of workdir: %s", workdir);
                 logger.error(message);
                 throw new IllegalStateException(message, e);
+            } finally {
+                counterService.decrement(COUNTER_ACTIVE_TASKS);
             }
         };
 
