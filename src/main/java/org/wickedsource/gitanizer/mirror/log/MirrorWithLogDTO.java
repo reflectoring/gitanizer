@@ -1,6 +1,6 @@
-package org.wickedsource.gitanizer.mirror.controller.log;
+package org.wickedsource.gitanizer.mirror.log;
 
-import org.wickedsource.gitanizer.mirror.controller.list.MirrorDTO;
+import org.wickedsource.gitanizer.mirror.list.MirrorDTO;
 
 public class MirrorWithLogDTO extends MirrorDTO {
 

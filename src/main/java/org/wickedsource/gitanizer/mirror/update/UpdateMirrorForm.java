@@ -1,4 +1,4 @@
-package org.wickedsource.gitanizer.mirror.controller.update;
+package org.wickedsource.gitanizer.mirror.update;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.URL;

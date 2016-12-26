@@ -1,4 +1,4 @@
-package org.wickedsource.gitanizer.mirror.controller.update;
+package org.wickedsource.gitanizer.mirror.update;
 
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;

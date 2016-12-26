@@ -1,8 +1,8 @@
-package org.wickedsource.gitanizer.mirror.controller.create;
+package org.wickedsource.gitanizer.mirror.create;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.URL;
-import org.wickedsource.gitanizer.mirror.validation.UniqueMirrorName;
+import org.wickedsource.gitanizer.mirror.domain.UniqueMirrorName;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;

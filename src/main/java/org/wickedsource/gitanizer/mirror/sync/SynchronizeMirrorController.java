@@ -1,4 +1,4 @@
-package org.wickedsource.gitanizer.mirror.controller.sync;
+package org.wickedsource.gitanizer.mirror.sync;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

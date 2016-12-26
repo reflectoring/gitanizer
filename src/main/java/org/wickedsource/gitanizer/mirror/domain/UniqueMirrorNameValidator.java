@@ -1,7 +1,6 @@
-package org.wickedsource.gitanizer.mirror.validation;
+package org.wickedsource.gitanizer.mirror.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.wickedsource.gitanizer.mirror.domain.MirrorRepository;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

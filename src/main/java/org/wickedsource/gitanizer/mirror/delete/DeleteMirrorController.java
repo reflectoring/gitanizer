@@ -1,4 +1,4 @@
-package org.wickedsource.gitanizer.mirror.controller.delete;
+package org.wickedsource.gitanizer.mirror.delete;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.wickedsource.gitanizer.core.ResourceNotFoundException;
 import org.wickedsource.gitanizer.core.WorkdirConfiguration;
-import org.wickedsource.gitanizer.mirror.controller.sync.SubgitImportService;
+import org.wickedsource.gitanizer.mirror.sync.SubgitImportService;
 import org.wickedsource.gitanizer.mirror.domain.Mirror;
 import org.wickedsource.gitanizer.mirror.domain.MirrorRepository;
 

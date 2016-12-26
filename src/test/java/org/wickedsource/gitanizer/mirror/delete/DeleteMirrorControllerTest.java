@@ -1,4 +1,4 @@
-package org.wickedsource.gitanizer.mirror.controller.delete;
+package org.wickedsource.gitanizer.mirror.delete;
 
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;

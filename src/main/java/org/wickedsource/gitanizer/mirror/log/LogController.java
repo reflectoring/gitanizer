@@ -1,4 +1,4 @@
-package org.wickedsource.gitanizer.mirror.controller.log;
+package org.wickedsource.gitanizer.mirror.log;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -7,7 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.wickedsource.gitanizer.core.ResourceNotFoundException;
-import org.wickedsource.gitanizer.mirror.controller.sync.SubgitImportService;
+import org.wickedsource.gitanizer.mirror.sync.SubgitImportService;
 import org.wickedsource.gitanizer.mirror.domain.Mirror;
 import org.wickedsource.gitanizer.mirror.domain.MirrorRepository;
 

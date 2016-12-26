@@ -1,4 +1,4 @@
-package org.wickedsource.gitanizer.mirror.validation;
+package org.wickedsource.gitanizer.mirror.domain;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

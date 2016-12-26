@@ -1,4 +1,4 @@
-package org.wickedsource.gitanizer.mirror.controller.list;
+package org.wickedsource.gitanizer.mirror.list;
 
 import java.time.LocalDateTime;
 
