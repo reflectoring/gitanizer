@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @ConditionalOnProperty(value = "gitanizer.scheduling.disabled", havingValue = "false", matchIfMissing = true)
 public class MirrorSyncService {
 
-    public static final int DEFAULT_INTERVAL = 60000;
+    public static final int DEFAULT_INTERVAL = 5 * 60;
 
     private SubgitImportService subgitImportService;
 
