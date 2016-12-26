@@ -1,7 +1,7 @@
 <dataset>
     <mirror/>
 
-    <mirror id="1" name="gitanizer" remote_svn_url="https://github.com/thombergs/gitanizer.git"
+    <mirror id="1" display_name="gitanizer" remote_svn_url="https://github.com/thombergs/gitanizer.git"
             last_updated="2016-11-27 12:00:00" sync_active="false" last_status_message="No message yet"
             workdir_name="workdir"/>
 </dataset>

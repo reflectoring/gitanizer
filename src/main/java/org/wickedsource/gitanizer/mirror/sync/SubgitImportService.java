@@ -96,15 +96,16 @@ public class SubgitImportService {
      */
     public void startImport(Mirror mirror) {
         Path subgitPath = subgitConfiguration.getSubgitExecutable();
+        Path gitPath = subgitConfiguration.getGitExecutable();
         Path workdir = workdirConfiguration.getWorkdir(mirror.getWorkdirName());
-        Path subgitDir = workdirConfiguration.getSubgitDir(mirror.getWorkdirName());
+        Path gitDir = workdirConfiguration.getGitDir(mirror.getWorkdirName());
 
         try {
             StatusMessageListener listener = new StatusMessageListener(mirror.getId(), statusMessageService);
 
             OutputStream logOutputStream = new FileOutputStream(getLogFile(mirror).toFile(), true);
-            ImportCommand importCommand = new ImportCommand(subgitPath.toString())
-                    .withTargetGitPath(subgitDir.toString())
+            ImportCommand importCommand = new ImportCommand(subgitPath.toString(), gitPath.toString())
+                    .withTargetGitPath(gitDir.toString())
                     .withSourceSvnUrl(mirror.getRemoteSvnUrl().toString())
                     .withListener(listener)
                     .withLogOutputStream(logOutputStream)
@@ -122,7 +123,7 @@ public class SubgitImportService {
                     logOutputStream.close();
                 } catch (Exception e) {
                     String message = String.format("IOException during async execution of subgit import command: %s", importCommand);
-                    logger.error(message);
+                    logger.error(message, e);
                     throw new IllegalStateException(message, e);
                 } finally {
                     counterService.decrement(COUNTER_ACTIVE_TASKS);

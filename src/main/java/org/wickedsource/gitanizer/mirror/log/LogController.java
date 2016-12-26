@@ -54,7 +54,7 @@ public class LogController {
             }
 
             MirrorWithLogDTO mirrorDTO = new MirrorWithLogDTO();
-            mirrorDTO.setName(mirror.getName());
+            mirrorDTO.setName(mirror.getDisplayName());
             mirrorDTO.setLog(logString);
 
             model.addAttribute("mirror", mirrorDTO);

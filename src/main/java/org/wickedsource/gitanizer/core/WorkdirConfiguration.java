@@ -1,14 +1,14 @@
 package org.wickedsource.gitanizer.core;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-@Component
+@Configuration
 public class WorkdirConfiguration {
 
     private Path applicationWorkdir;
@@ -50,7 +50,11 @@ public class WorkdirConfiguration {
         return subWorkdir;
     }
 
-    public Path getSubgitDir(String workdirName){
+    public Path getApplicationWorkdir() {
+        return applicationWorkdir;
+    }
+
+    public Path getGitDir(String workdirName) {
         return getWorkdir(workdirName).resolve("git");
     }
 

@@ -41,7 +41,7 @@ public class UpdateMirrorController {
 
         UpdateMirrorForm form = new UpdateMirrorForm();
         form.setId(id);
-        form.setRepositoryName(mirror.getName());
+        form.setRepositoryName(mirror.getDisplayName());
         form.setRemoteSvnUrl(mirror.getRemoteSvnUrl().toString());
 
         model.addAttribute("form", form);
@@ -56,7 +56,7 @@ public class UpdateMirrorController {
                 throw new ResourceNotFoundException();
             }
 
-            if (mirrorRepository.countByNameExcludeId(form.getRepositoryName(), form.getId()) > 0) {
+            if (mirrorRepository.countByDisplayNameExcludeId(form.getRepositoryName(), form.getId()) > 0) {
                 bindingResult.rejectValue("repositoryName", "mirrorForm.repositoryName.duplicate");
             }
 
@@ -65,7 +65,7 @@ public class UpdateMirrorController {
             }
 
             mirror.setLastUpdated(dateProvider.now());
-            mirror.setName(form.getRepositoryName());
+            mirror.setDisplayName(form.getRepositoryName());
             mirror.setRemoteSvnUrl(new URL(form.getRemoteSvnUrl()));
             // attribute "workdirName" is not updated, so that the workdir remains intact
 

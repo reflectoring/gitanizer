@@ -13,9 +13,12 @@ public class SubgitConfiguration {
 
     private Path subgitExecutable;
 
+    private Path gitExecutable;
+
     @Autowired
     public SubgitConfiguration(Environment environment) {
         initSubgitPathFromEnvironment(environment);
+        initGitPathFromEnvironment(environment);
     }
 
     private void initSubgitPathFromEnvironment(Environment environment) {
@@ -30,6 +33,18 @@ public class SubgitConfiguration {
         }
     }
 
+    private void initGitPathFromEnvironment(Environment environment) {
+        String workdir = environment.getProperty("gitanizer.git.executable.path");
+        if (workdir == null) {
+            throw new IllegalArgumentException("Environment variable 'gitanizer.git.executable.path' not set!");
+        }
+        try {
+            gitExecutable = Paths.get(workdir);
+        } catch (InvalidPathException e) {
+            throw new IllegalArgumentException("Environment variable 'gitanizer.git.executable.path' contains an invalid path!", e);
+        }
+    }
+
     /**
      * Returns the path to the subgit executable.
      */
@@ -37,4 +52,10 @@ public class SubgitConfiguration {
         return subgitExecutable;
     }
 
+    /**
+     * Returns the path to the git executable.
+     */
+    public Path getGitExecutable() {
+        return gitExecutable;
+    }
 }

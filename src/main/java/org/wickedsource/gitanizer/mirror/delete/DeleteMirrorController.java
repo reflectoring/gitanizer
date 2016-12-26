@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.wickedsource.gitanizer.core.ResourceNotFoundException;
 import org.wickedsource.gitanizer.core.WorkdirConfiguration;
-import org.wickedsource.gitanizer.mirror.sync.SubgitImportService;
 import org.wickedsource.gitanizer.mirror.domain.Mirror;
 import org.wickedsource.gitanizer.mirror.domain.MirrorRepository;
+import org.wickedsource.gitanizer.mirror.sync.SubgitImportService;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -123,7 +123,7 @@ public class DeleteMirrorController {
                 }
             } catch (Exception e) {
                 String message = String.format("Exception during async deletion of workdir: %s", workdir);
-                logger.error(message);
+                logger.error(message, e);
                 throw new IllegalStateException(message, e);
             } finally {
                 counterService.decrement(COUNTER_ACTIVE_TASKS);

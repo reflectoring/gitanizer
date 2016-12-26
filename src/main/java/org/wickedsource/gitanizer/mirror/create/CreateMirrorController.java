@@ -44,7 +44,7 @@ public class CreateMirrorController {
                 return "/mirrors/create";
             }
             Mirror mirror = new Mirror();
-            mirror.setName(form.getRepositoryName());
+            mirror.setDisplayName(form.getRepositoryName());
             mirror.setRemoteSvnUrl(new URL(form.getRemoteSvnUrl()));
             mirror.setLastUpdated(dateProvider.now());
             mirror.setWorkdirName(UUID.randomUUID().toString());

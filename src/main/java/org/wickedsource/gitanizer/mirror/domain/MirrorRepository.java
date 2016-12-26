@@ -6,8 +6,10 @@ import org.springframework.data.repository.query.Param;
 
 public interface MirrorRepository extends CrudRepository<Mirror, Long> {
 
-    int countByName(String name);
+    int countByDisplayName(String name);
 
-    @Query("select count(m) from Mirror m where name = :name and id <> :id")
-    int countByNameExcludeId(@Param("name") String name, @Param("id") long id);
+    @Query("select count(m) from Mirror m where displayName = :name and id <> :id")
+    int countByDisplayNameExcludeId(@Param("name") String name, @Param("id") long id);
+
+    Mirror findByGitRepositoryName(String gitRepositoryName);
 }

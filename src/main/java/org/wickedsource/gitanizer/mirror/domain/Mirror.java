@@ -9,15 +9,15 @@ import java.time.LocalDateTime;
  * into which the SVN remote should be imported.
  */
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = "name"))
+@Table
 public class Mirror {
 
     @Id
     @GeneratedValue
     private long id;
 
-    @Column(nullable = false)
-    private String name;
+    @Column(unique = true, nullable = false)
+    private String displayName;
 
     @Column(nullable = false)
     private URL remoteSvnUrl;
@@ -31,7 +31,10 @@ public class Mirror {
     @Column
     private String lastStatusMessage;
 
-    @Column
+    @Column(unique = true, nullable = false)
+    private String gitRepositoryName;
+
+    @Column(unique = true, nullable = false)
     private String workdirName;
 
     public long getId() {
@@ -42,12 +45,13 @@ public class Mirror {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+        this.gitRepositoryName = displayName.replaceAll("\\W", "-") + ".git";
     }
 
     public URL getRemoteSvnUrl() {
@@ -88,5 +92,13 @@ public class Mirror {
 
     public void setWorkdirName(String workdirName) {
         this.workdirName = workdirName;
+    }
+
+    private String getGitRepositoryName() {
+        return gitRepositoryName;
+    }
+
+    private void setGitRepositoryName(String gitRepositoryName) {
+        this.gitRepositoryName = gitRepositoryName;
     }
 }

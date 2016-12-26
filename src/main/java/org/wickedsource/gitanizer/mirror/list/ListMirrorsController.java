@@ -33,7 +33,7 @@ public class ListMirrorsController {
         for (Mirror mirror : mirrors) {
             MirrorDTO dto = new MirrorDTO();
             dto.setId(mirror.getId());
-            dto.setName(mirror.getName());
+            dto.setName(mirror.getDisplayName());
             dto.setLastChangeDate(mirror.getLastUpdated());
             dto.setSyncStatus(mirror.isSyncActive());
             if (mirror.getLastStatusMessage() == null) {

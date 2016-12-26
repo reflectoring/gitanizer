@@ -2,6 +2,7 @@ package org.wickedsource.gitanizer.subgit;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.Executor;
 import org.apache.commons.exec.PumpStreamHandler;
 
 import java.io.File;
@@ -30,8 +31,11 @@ public class ImportCommand extends SubgitCommand {
 
     private String workingDirectory;
 
-    public ImportCommand(String subgitPath) {
+    private String gitPath;
+
+    public ImportCommand(String subgitPath, String gitPath) {
         super(subgitPath);
+        this.gitPath = gitPath;
     }
 
     public ImportCommand withSourceSvnUrl(String sourceSvnUrl) {
@@ -77,26 +81,14 @@ public class ImportCommand extends SubgitCommand {
     }
 
     public void execute() throws IOException {
-        CommandLine commandLine = new CommandLine(getSubgitPath());
-        commandLine.addArgument("import");
-        commandLine.addArgument("--svn-url");
-        commandLine.addArgument(this.sourceSvnUrl);
-        commandLine.addArgument("--non-interactive");
-        commandLine.addArgument(this.targetGitPath);
-        DefaultExecutor executor = new DefaultExecutor();
-        executor.setWorkingDirectory(new File(this.workingDirectory));
-        executor.setStreamHandler(new PumpStreamHandler(
-                getProgressListener(this.listener),
-                getErrorListener(this.listener)));
-
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-
         try {
             if (this.out != null) {
                 out.write("----------------------\r\n".getBytes());
                 out.write(String.format("%s - Starting subgit import run\r\n", formatter.format(LocalDateTime.now())).getBytes());
             }
-            executor.execute(commandLine);
+            subgitImport();
+            updateServerInfo();
             if (this.out != null) {
                 out.write(String.format("%s - Finished subgit import run\r\n", formatter.format(LocalDateTime.now())).getBytes());
                 out.write("----------------------\r\n".getBytes());
@@ -104,6 +96,34 @@ public class ImportCommand extends SubgitCommand {
         } catch (Exception e) {
             out.close();
         }
+    }
+
+    private void subgitImport() throws IOException {
+        CommandLine commandLine = new CommandLine(getSubgitPath());
+        commandLine.addArgument("import");
+        commandLine.addArgument("--svn-url");
+        commandLine.addArgument(this.sourceSvnUrl);
+        commandLine.addArgument("--non-interactive");
+        commandLine.addArgument(this.targetGitPath);
+
+        Executor executor = new DefaultExecutor();
+        executor.setWorkingDirectory(new File(this.workingDirectory));
+        executor.setStreamHandler(new PumpStreamHandler(
+                getProgressListener(this.listener),
+                getErrorListener(this.listener)));
+
+        executor.execute(commandLine);
+    }
+
+    private void updateServerInfo() throws IOException {
+        CommandLine commandLine = new CommandLine(getGitPath());
+        commandLine.addArgument("update-server-info");
+
+        Executor executor = new DefaultExecutor();
+        executor.setWorkingDirectory(new File(this.targetGitPath));
+        executor.setStreamHandler(new PumpStreamHandler(out, out));
+
+        executor.execute(commandLine);
     }
 
     private ProgressListenerOutputStream getProgressListener(ImportCommandListener listener) {
@@ -126,5 +146,9 @@ public class ImportCommand extends SubgitCommand {
                 "sourceSvnUrl='" + sourceSvnUrl + '\'' +
                 ", targetGitPath='" + targetGitPath + '\'' +
                 '}';
+    }
+
+    public String getGitPath() {
+        return gitPath;
     }
 }

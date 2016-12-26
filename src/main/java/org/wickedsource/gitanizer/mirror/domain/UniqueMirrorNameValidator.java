@@ -24,6 +24,6 @@ public class UniqueMirrorNameValidator implements ConstraintValidator<UniqueMirr
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        return mirrorRepository.countByName(value) == 0;
+        return mirrorRepository.countByDisplayName(value) == 0;
     }
 }
