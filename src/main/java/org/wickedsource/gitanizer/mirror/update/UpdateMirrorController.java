@@ -64,7 +64,7 @@ public class UpdateMirrorController {
                 return "/mirrors/update";
             }
 
-            mirror.setLastUpdated(dateProvider.now());
+            mirror.setLastStatusUpdate(dateProvider.now());
             mirror.setDisplayName(form.getRepositoryName());
             mirror.setRemoteSvnUrl(new URL(form.getRemoteSvnUrl()));
             // attribute "workdirName" is not updated, so that the workdir remains intact

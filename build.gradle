@@ -70,6 +70,7 @@ bootRun {
                     "-Dgitanizer.subgit.executable.path=D:\\programs\\subgit-3.2.2\\bin\\subgit.bat",
                     "-Dgitanizer.git.executable.path=git",
                     "-Dgitanizer.importTasks.maxThreads=5",
+                    "-Dgitanizer.importTasks.intervalInSeconds=10",
 
                     // debugging
                     "-Xdebug",

@@ -2,6 +2,6 @@
     <mirror/>
 
     <mirror id="1" display_name="gitanizer" remote_svn_url="https://github.com/thombergs/gitanizer.git"
-            last_updated="2016-11-27 12:00:00" sync_active="false" last_status_message="No message yet"
-            workdir_name="workdir" git_repository_name="gitanizer.git"/>
+            last_status_update="2016-11-27 12:00:00" sync_active="false" last_status_message="No message yet"
+            workdir_name="workdir" git_repository_name="gitanizer.git" last_import_finished="2016-11-27 12:00:00"/>
 </dataset>

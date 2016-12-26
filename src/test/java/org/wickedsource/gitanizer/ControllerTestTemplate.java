@@ -22,7 +22,8 @@ import org.springframework.web.context.WebApplicationContext;
         "gitanizer.now=2016-11-27T12:00:00",
         "gitanizer.workdir=gitanizerWorkdir",
         "gitanizer.subgit.executable.path=foobar",
-        "gitanizer.git.executable.path=git"
+        "gitanizer.git.executable.path=git",
+        "gitanizer.scheduling.disabled=true"
 })
 @WebAppConfiguration
 public abstract class ControllerTestTemplate {

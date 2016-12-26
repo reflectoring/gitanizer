@@ -23,7 +23,10 @@ public class Mirror {
     private URL remoteSvnUrl;
 
     @Column(nullable = false)
-    private LocalDateTime lastUpdated;
+    private LocalDateTime lastStatusUpdate;
+
+    @Column
+    private LocalDateTime lastImportFinished;
 
     @Column(nullable = false)
     private boolean syncActive;
@@ -62,12 +65,12 @@ public class Mirror {
         this.remoteSvnUrl = remoteSvnUrl;
     }
 
-    public LocalDateTime getLastUpdated() {
-        return lastUpdated;
+    public LocalDateTime getLastStatusUpdate() {
+        return lastStatusUpdate;
     }
 
-    public void setLastUpdated(LocalDateTime lastUpdated) {
-        this.lastUpdated = lastUpdated;
+    public void setLastStatusUpdate(LocalDateTime lastStatusUpdate) {
+        this.lastStatusUpdate = lastStatusUpdate;
     }
 
     public boolean isSyncActive() {
@@ -100,5 +103,13 @@ public class Mirror {
 
     private void setGitRepositoryName(String gitRepositoryName) {
         this.gitRepositoryName = gitRepositoryName;
+    }
+
+    public LocalDateTime getLastImportFinished() {
+        return lastImportFinished;
+    }
+
+    public void setLastImportFinished(LocalDateTime lastImportFinished) {
+        this.lastImportFinished = lastImportFinished;
     }
 }

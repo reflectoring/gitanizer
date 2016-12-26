@@ -34,7 +34,7 @@ public class ListMirrorsController {
             MirrorDTO dto = new MirrorDTO();
             dto.setId(mirror.getId());
             dto.setName(mirror.getDisplayName());
-            dto.setLastChangeDate(mirror.getLastUpdated());
+            dto.setLastChangeDate(mirror.getLastStatusUpdate());
             dto.setSyncStatus(mirror.isSyncActive());
             if (mirror.getLastStatusMessage() == null) {
                 dto.setLastStatusMessage("No status yet");

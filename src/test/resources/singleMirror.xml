@@ -1,7 +1,7 @@
 <dataset>
     <mirror/>
 
-    <mirror id="1" display_name="coderadar" remote_svn_url="http://coderadar.git" last_updated="2016-11-27 12:00:00"
+    <mirror id="1" display_name="coderadar" remote_svn_url="http://coderadar.git" last_status_update="2016-11-27 12:00:00"
             sync_active="false" last_status_message="No message yet" workdir_name="workdir"
-            git_repository_name="coderadar.git"/>
+            git_repository_name="coderadar.git" last_import_finished="2016-11-27 12:00:00"/>
 </dataset>

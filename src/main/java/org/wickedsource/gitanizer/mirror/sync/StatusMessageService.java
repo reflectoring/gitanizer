@@ -25,7 +25,7 @@ public class StatusMessageService {
      * @param percentage percentage of the progress.
      */
     public void progress(Long mirrorId, int percentage) {
-        saveMessage(mirrorId, String.format("Synchronizing. Progress: %d%%.", percentage));
+        saveMessage(mirrorId, String.format("Synchronizing. Progress: %d%%.", percentage), false);
     }
 
     /**
@@ -36,7 +36,7 @@ public class StatusMessageService {
      * @param errorMessage the error message to include in the status message.
      */
     public void error(Long mirrorId, String errorMessage) {
-        saveMessage(mirrorId, String.format("Error during Synchronization: %s.", errorMessage));
+        saveMessage(mirrorId, String.format("Error during Synchronization: %s.", errorMessage), true);
     }
 
     /**
@@ -46,7 +46,7 @@ public class StatusMessageService {
      * @param mirrorId ID of the mirror for which to store the status message.
      */
     public void upToDate(Long mirrorId) {
-        saveMessage(mirrorId, "Mirror is up-to-date.");
+        saveMessage(mirrorId, "Mirror is up-to-date.", true);
     }
 
     /**
@@ -55,7 +55,7 @@ public class StatusMessageService {
      * @param mirrorId ID of the mirror for which to store the status message.
      */
     public void paused(Long mirrorId) {
-        saveMessage(mirrorId, "Synchronization paused.");
+        saveMessage(mirrorId, "Synchronization paused.", false);
     }
 
     /**
@@ -65,15 +65,18 @@ public class StatusMessageService {
      * @param mirrorId ID of the mirror for which to store the status message.
      */
     public void syncStarted(Long mirrorId) {
-        saveMessage(mirrorId, "Synchronization initializing.");
+        saveMessage(mirrorId, "Synchronization initializing.", false);
     }
 
-    private void saveMessage(Long mirrorId, String message) {
+    private void saveMessage(Long mirrorId, String message, boolean updateLastImportDate) {
         Mirror mirror = mirrorRepository.findOne(mirrorId);
         if (mirror != null) {
             // mirror may be null when deleted
-            mirror.setLastUpdated(LocalDateTime.now());
+            mirror.setLastStatusUpdate(LocalDateTime.now());
             mirror.setLastStatusMessage(message);
+            if (updateLastImportDate) {
+                mirror.setLastImportFinished(LocalDateTime.now());
+            }
             mirrorRepository.save(mirror);
         }
     }
