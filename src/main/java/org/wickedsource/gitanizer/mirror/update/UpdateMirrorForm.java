@@ -15,7 +15,6 @@ public class UpdateMirrorForm {
 
     @NotNull(message = "{mirrorForm.repositoryName.notNull}")
     @NotBlank(message = "{mirrorForm.repositoryName.notNull}")
-    @Pattern(regexp = "^[a-zA-Z0-9-_]+$", message = "{mirrorForm.repositoryName.invalid}")
     private String repositoryName;
 
     @NotNull(message = "{mirrorForm.remoteSvnUrl.notNull}")

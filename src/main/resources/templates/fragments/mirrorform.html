@@ -9,7 +9,7 @@
                              class="fa fa-times-circle-o"></i>Display Name</label>
         <input type="text" class="form-control" id="name"
                th:field="*{repositoryName}"
-               placeholder="A name for your repository. Should not contain special characters."/>
+               placeholder="Choose a name for your mirror"/>
         <div th:each="error, it : ${#fields.errors('repositoryName')}">
             <span class="help-block" th:text="${error}"></span>
         </div>

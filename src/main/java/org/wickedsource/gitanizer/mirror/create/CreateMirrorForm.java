@@ -16,7 +16,6 @@ public class CreateMirrorForm {
 
     @NotNull(message = "{mirrorForm.repositoryName.notNull}")
     @NotBlank(message = "{mirrorForm.repositoryName.notNull}")
-    @Pattern(regexp = "^[a-zA-Z0-9-_]+$", message = "{mirrorForm.repositoryName.invalid}")
     @UniqueMirrorName(message = "{mirrorForm.repositoryName.duplicate}")
     private String repositoryName;
 
