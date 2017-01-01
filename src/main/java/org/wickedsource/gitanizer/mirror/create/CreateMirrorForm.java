@@ -2,17 +2,16 @@ package org.wickedsource.gitanizer.mirror.create;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.URL;
+import org.wickedsource.gitanizer.mirror.domain.OptionalGroup;
 import org.wickedsource.gitanizer.mirror.domain.UniqueMirrorName;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 /**
  * Contains the data necessary to create a new repository mirror.
  */
+@OptionalGroup(fieldNames = {"svnUsername", "svnPassword"}, message="{mirrorForm.svnCredentials.invalid}")
 public class CreateMirrorForm {
-
-    private long id;
 
     @NotNull(message = "{mirrorForm.repositoryName.notNull}")
     @NotBlank(message = "{mirrorForm.repositoryName.notNull}")
@@ -23,6 +22,10 @@ public class CreateMirrorForm {
     @NotBlank(message = "{mirrorForm.remoteSvnUrl.notNull}")
     @URL(message = "{mirrorForm.remoteSvnUrl.invalid}")
     private String remoteSvnUrl;
+
+    private String svnUsername;
+
+    private String svnPassword;
 
     public String getRepositoryName() {
         return repositoryName;
@@ -40,11 +43,19 @@ public class CreateMirrorForm {
         this.remoteSvnUrl = remoteSvnUrl;
     }
 
-    public long getId() {
-        return id;
+    public String getSvnUsername() {
+        return svnUsername;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setSvnUsername(String svnUsername) {
+        this.svnUsername = svnUsername;
+    }
+
+    public String getSvnPassword() {
+        return svnPassword;
+    }
+
+    public void setSvnPassword(String svnPassword) {
+        this.svnPassword = svnPassword;
     }
 }

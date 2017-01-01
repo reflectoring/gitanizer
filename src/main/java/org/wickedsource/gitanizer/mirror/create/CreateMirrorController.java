@@ -48,6 +48,8 @@ public class CreateMirrorController {
             mirror.setRemoteSvnUrl(new URL(form.getRemoteSvnUrl()));
             mirror.setLastStatusUpdate(dateProvider.now());
             mirror.setWorkdirName(UUID.randomUUID().toString());
+            mirror.setSvnPassword(form.getSvnPassword());
+            mirror.setSvnUsername(form.getSvnUsername());
             mirrorRepository.save(mirror);
             return "redirect:/mirrors/list";
         } catch (MalformedURLException e) {

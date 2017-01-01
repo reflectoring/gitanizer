@@ -43,6 +43,8 @@ public class UpdateMirrorController {
         form.setId(id);
         form.setRepositoryName(mirror.getDisplayName());
         form.setRemoteSvnUrl(mirror.getRemoteSvnUrl().toString());
+        form.setSvnPassword(mirror.getSvnPassword());
+        form.setSvnUsername(mirror.getSvnUsername());
 
         model.addAttribute("form", form);
         return "/mirrors/update";
@@ -67,6 +69,8 @@ public class UpdateMirrorController {
             mirror.setLastStatusUpdate(dateProvider.now());
             mirror.setDisplayName(form.getRepositoryName());
             mirror.setRemoteSvnUrl(new URL(form.getRemoteSvnUrl()));
+            mirror.setSvnPassword(form.getSvnPassword());
+            mirror.setSvnUsername(form.getSvnUsername());
             // attribute "workdirName" is not updated, so that the workdir remains intact
 
             mirrorRepository.save(mirror);

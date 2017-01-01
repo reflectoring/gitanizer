@@ -26,6 +26,35 @@
             <span class="help-block" th:text="${error}"></span>
         </div>
     </div>
+    <h4>Subversion Credentials</h4>
+    <p>You can specify a username and password to access the remote SVN server. If the SVN server
+        requires no credentials simply leave these fields empty. Note that username and password
+        will be stored in plain text, so you should provide read-only
+        credentials.</p>
+    <div class="form-group"
+         th:classappend="${#fields.hasErrors('svnUsername')} ? 'has-error' : ''">
+        <label for="svnUsername"><i
+                th:if="${#fields.hasErrors('svnUsername')}"
+                class="fa fa-times-circle-o"></i>SVN username</label>
+        <input type="text" class="form-control" id="svnUsername"
+               th:field="*{svnUsername}"
+               placeholder="Username to access SVN server"/>
+        <div th:each="error, it : ${#fields.errors('svnUsername')}">
+            <span class="help-block" th:text="${error}"></span>
+        </div>
+    </div>
+    <div class="form-group"
+         th:classappend="${#fields.hasErrors('svnPassword')} ? 'has-error' : ''">
+        <label for="svnUsername"><i
+                th:if="${#fields.hasErrors('svnPassword')}"
+                class="fa fa-times-circle-o"></i>SVN password</label>
+        <input type="text" class="form-control" id="svnPassword"
+               th:field="*{svnPassword}"
+               placeholder="Password to access SVN server"/>
+        <div th:each="error, it : ${#fields.errors('svnPassword')}">
+            <span class="help-block" th:text="${error}"></span>
+        </div>
+    </div>
 </div>
 
 </html>

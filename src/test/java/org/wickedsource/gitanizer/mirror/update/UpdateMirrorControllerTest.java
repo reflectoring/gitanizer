@@ -32,10 +32,12 @@ public class UpdateMirrorControllerTest extends ControllerTestTemplate {
     @Test
     @DatabaseSetup("/singleMirror.xml")
     @ExpectedDatabase("/singleMirror2.xml")
-    public void editMirror() throws Exception {
+    public void updateMirror() throws Exception {
         mvc().perform(post("/mirrors/1/update")
                 .param("repositoryName", "gitanizer")
-                .param("remoteSvnUrl", "https://github.com/thombergs/gitanizer.git"))
+                .param("remoteSvnUrl", "https://github.com/thombergs/gitanizer.git")
+                .param("svnUsername", "newUsername")
+                .param("svnPassword", "newPassword"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/mirrors/list"));
     }
@@ -43,7 +45,7 @@ public class UpdateMirrorControllerTest extends ControllerTestTemplate {
     @Test
     @DatabaseSetup("/singleMirror.xml")
     @ExpectedDatabase("/singleMirror.xml")
-    public void editMirrorWithValidationError() throws Exception {
+    public void updateMirrorWithValidationError() throws Exception {
         mvc().perform(post("/mirrors/1/update")
                 .param("repositoryName", "")
                 .param("remoteSvnUrl", "invalidUrl"))

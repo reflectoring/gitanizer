@@ -2,13 +2,14 @@ package org.wickedsource.gitanizer.mirror.update;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.URL;
+import org.wickedsource.gitanizer.mirror.domain.OptionalGroup;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 /**
  * Contains the data necessary to edit an existing repository mirror.
  */
+@OptionalGroup(fieldNames = {"svnUsername", "svnPassword"}, message = "{mirrorForm.svnCredentials.invalid}")
 public class UpdateMirrorForm {
 
     private long id;
@@ -21,6 +22,10 @@ public class UpdateMirrorForm {
     @NotBlank(message = "{mirrorForm.remoteSvnUrl.notNull}")
     @URL(message = "{mirrorForm.remoteSvnUrl.invalid}")
     private String remoteSvnUrl;
+
+    private String svnUsername;
+
+    private String svnPassword;
 
     public String getRepositoryName() {
         return repositoryName;
@@ -44,5 +49,21 @@ public class UpdateMirrorForm {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getSvnUsername() {
+        return svnUsername;
+    }
+
+    public void setSvnUsername(String svnUsername) {
+        this.svnUsername = svnUsername;
+    }
+
+    public String getSvnPassword() {
+        return svnPassword;
+    }
+
+    public void setSvnPassword(String svnPassword) {
+        this.svnPassword = svnPassword;
     }
 }

@@ -5,21 +5,17 @@
 
 <th:block layout:fragment="content">
     <section class="content-header">
-        <h1>Edit Mirror</h1>
+        <h1>Update Mirror</h1>
         <ol class="breadcrumb">
             <li><a th:href="@{/mirrors/list}">Home</a></li>
             <li><a th:href="@{/mirrors/list}">Mirror Overview</a></li>
-            <li class="active">Edit Mirror</li>
+            <li class="active">Update Mirror</li>
         </ol>
     </section>
     <section class="content">
         <div class="row">
             <div class="col-xs-12">
                 <div class="box">
-                    <div class="box-header">
-                        <h3 class="box-title">Edit Mirror</h3>
-
-                    </div>
                     <div class="box-body table-responsive no-padding">
                         <form role="form" th:action="@{/mirrors/{id}/update(id=${form.id})}"
                               th:object="${form}"

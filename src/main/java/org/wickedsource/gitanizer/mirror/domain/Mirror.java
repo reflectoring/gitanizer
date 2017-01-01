@@ -22,6 +22,12 @@ public class Mirror {
     @Column(nullable = false)
     private URL remoteSvnUrl;
 
+    @Column
+    private String svnUsername;
+
+    @Column
+    private String svnPassword;
+
     @Column(nullable = false)
     private LocalDateTime lastStatusUpdate;
 
@@ -111,5 +117,21 @@ public class Mirror {
 
     public void setLastImportFinished(LocalDateTime lastImportFinished) {
         this.lastImportFinished = lastImportFinished;
+    }
+
+    public String getSvnUsername() {
+        return svnUsername;
+    }
+
+    public void setSvnUsername(String svnUsername) {
+        this.svnUsername = svnUsername;
+    }
+
+    public String getSvnPassword() {
+        return svnPassword;
+    }
+
+    public void setSvnPassword(String svnPassword) {
+        this.svnPassword = svnPassword;
     }
 }
