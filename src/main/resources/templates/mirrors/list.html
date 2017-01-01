@@ -11,7 +11,7 @@
     </section>
     <section class="content">
 
-        <div th:each="mirror : ${mirrors}" class="modal" th:id="'deleteConfirmationModel' + ${mirror.id}">
+        <div th:each="mirror : ${mirrors}" class="modal" th:id="'deleteConfirmationModal' + ${mirror.id}">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -70,7 +70,7 @@
                                     <a class="btn btn-default"
                                        th:href="@{/mirrors/{id}/update(id=${mirror.id})}"><i
                                             class="fa fa-edit" title="Edit Mirror"></i></a>
-                                    <button type="button" class="btn btn-default" data-toggle="modal" th:attr="data-target='#deleteConfirmationModel' + ${mirror.id}"><i
+                                    <button type="button" class="btn btn-default" data-toggle="modal" th:attr="data-target='#deleteConfirmationModal' + ${mirror.id}"><i
                                             class="fa fa-trash" title="Delete Mirror"></i></button>
                                 </td>
                             </tr>
