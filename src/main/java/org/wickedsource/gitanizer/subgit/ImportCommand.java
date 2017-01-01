@@ -4,6 +4,7 @@ import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.Executor;
 import org.apache.commons.exec.PumpStreamHandler;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -104,6 +105,17 @@ public class ImportCommand extends SubgitCommand {
         commandLine.addArgument("--svn-url");
         commandLine.addArgument(this.sourceSvnUrl);
         commandLine.addArgument("--non-interactive");
+
+        if (!StringUtils.isEmpty(this.username)) {
+            commandLine.addArgument("--username");
+            commandLine.addArgument(this.username);
+        }
+
+        if (!StringUtils.isEmpty(this.password)) {
+            commandLine.addArgument("--password");
+            commandLine.addArgument(this.password);
+        }
+
         commandLine.addArgument(this.targetGitPath);
 
         Executor executor = new DefaultExecutor();

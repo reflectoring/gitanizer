@@ -106,6 +106,8 @@ public class SubgitImportService {
             OutputStream logOutputStream = new FileOutputStream(getLogFile(mirror).toFile(), true);
             ImportCommand importCommand = new ImportCommand(subgitPath.toString(), gitPath.toString())
                     .withTargetGitPath(gitDir.toString())
+                    .withPassword(mirror.getSvnPassword())
+                    .withUsername(mirror.getSvnUsername())
                     .withSourceSvnUrl(mirror.getRemoteSvnUrl().toString())
                     .withListener(listener)
                     .withLogOutputStream(logOutputStream)

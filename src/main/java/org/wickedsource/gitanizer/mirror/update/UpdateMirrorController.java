@@ -1,5 +1,6 @@
 package org.wickedsource.gitanizer.mirror.update;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,8 +70,16 @@ public class UpdateMirrorController {
             mirror.setLastStatusUpdate(dateProvider.now());
             mirror.setDisplayName(form.getRepositoryName());
             mirror.setRemoteSvnUrl(new URL(form.getRemoteSvnUrl()));
-            mirror.setSvnPassword(form.getSvnPassword());
-            mirror.setSvnUsername(form.getSvnUsername());
+            if (!StringUtils.isEmpty(form.getSvnPassword())) {
+                mirror.setSvnPassword(form.getSvnPassword());
+            } else {
+                mirror.setSvnPassword(null);
+            }
+            if (!StringUtils.isEmpty(form.getSvnUsername())) {
+                mirror.setSvnUsername(form.getSvnUsername());
+            } else {
+                mirror.setSvnUsername(null);
+            }
             // attribute "workdirName" is not updated, so that the workdir remains intact
 
             mirrorRepository.save(mirror);
