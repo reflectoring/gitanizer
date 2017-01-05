@@ -20,7 +20,8 @@
                         <h4 class="modal-title">Confirm Deletion</h4>
                     </div>
                     <div class="modal-body">
-                        <p>Do you really want to delete the mirror '<span th:text="${mirror.name}"></span>'? This cannot be undone.</p>
+                        <p>Do you really want to delete the mirror '<span th:text="${mirror.name}"></span>'? This cannot
+                            be undone.</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
@@ -52,7 +53,9 @@
                             </tr>
                             <tr th:each="mirror : ${mirrors}">
                                 <td th:text="${mirror.name}">/gitanizer.git</td>
-                                <td th:text="${mirror.lastChangeDate}">11-7-2014</td>
+                                <td th:text="${#temporals.format(mirror.lastChangeDate, 'yyyy-MM-dd HH:mm:ss')}">
+                                    11-7-2014
+                                </td>
                                 <td th:text="${mirror.lastStatusMessage}">Import Progress 99%</td>
                                 <td>
                                     <a th:if="${mirror.syncStatus == false}" class="btn btn-default"
@@ -70,7 +73,8 @@
                                     <a class="btn btn-default"
                                        th:href="@{/mirrors/{id}/update(id=${mirror.id})}"><i
                                             class="fa fa-edit" title="Edit Mirror"></i></a>
-                                    <button type="button" class="btn btn-default" data-toggle="modal" th:attr="data-target='#deleteConfirmationModal' + ${mirror.id}"><i
+                                    <button type="button" class="btn btn-default" data-toggle="modal"
+                                            th:attr="data-target='#deleteConfirmationModal' + ${mirror.id}"><i
                                             class="fa fa-trash" title="Delete Mirror"></i></button>
                                 </td>
                             </tr>
