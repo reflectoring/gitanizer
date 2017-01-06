@@ -1,5 +1,6 @@
 package org.wickedsource.gitanizer.mirror.list;
 
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +27,7 @@ public class ListMirrorsController {
      * Shows a view listing all registered Mirrors.
      */
     @GetMapping({"/", "/mirrors/list"})
-    public String listMirrors(Model model) {
+    public String listMirrors(Model model, HttpServletRequest request) {
         Iterable<Mirror> mirrors = mirrorRepository.findAll();
 
         List<MirrorDTO> mirrorDTOs = new ArrayList<>();
@@ -36,6 +37,7 @@ public class ListMirrorsController {
             dto.setName(mirror.getDisplayName());
             dto.setLastChangeDate(mirror.getLastStatusUpdate());
             dto.setSyncStatus(mirror.isSyncActive());
+            dto.setGitCloneUrl(getGitCloneUrl(request, mirror.getGitRepositoryName()));
             if (mirror.getLastStatusMessage() == null) {
                 dto.setLastStatusMessage("No status yet");
             } else {
@@ -46,6 +48,10 @@ public class ListMirrorsController {
 
         model.addAttribute("mirrors", mirrorDTOs);
         return "/mirrors/list";
+    }
+
+    private String getGitCloneUrl(HttpServletRequest request, String gitRepositoryName) {
+        return String.format("%s://%s:%d/git/%s", request.getScheme(), request.getServerName(), request.getServerPort(), gitRepositoryName);
     }
 
 }

@@ -103,7 +103,7 @@ public class Mirror {
         this.workdirName = workdirName;
     }
 
-    private String getGitRepositoryName() {
+    public String getGitRepositoryName() {
         return gitRepositoryName;
     }
 

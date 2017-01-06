@@ -47,11 +47,28 @@
                             <tbody>
                             <tr>
                                 <th>Mirror Name</th>
+                                <th>Git Clone URL</th>
                                 <th>Last Status</th>
                                 <th style="width:100px"></th>
                             </tr>
                             <tr th:each="mirror : ${mirrors}">
                                 <td th:text="${mirror.name}">/gitanizer.git</td>
+                                <td>
+
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" class="form-control"
+                                               onClick="this.setSelectionRange(0, this.value.length)"
+                                               th:value="${mirror.gitCloneUrl}"
+                                               th:id="${'gitCloneUrl' + mirror.id}"/>
+                                        <span class="input-group-btn">
+                                          <button type="button" class="btn btn-default btn-flat"
+                                                  th:attr="data-clipboard-target='#gitCloneUrl' + ${mirror.id}">
+                                              <i class="fa fa-clipboard"></i>
+                                          </button>
+                                        </span>
+                                    </div>
+
+                                </td>
                                 <td>
                                     <span th:text="${#temporals.format(mirror.lastChangeDate, 'yyyy-MM-dd HH:mm:ss')}">11-7-2014</span>
                                     :&nbsp;

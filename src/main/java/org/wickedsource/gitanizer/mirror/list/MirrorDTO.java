@@ -14,6 +14,8 @@ public class MirrorDTO {
 
     private boolean syncStatus;
 
+    private String gitCloneUrl;
+
     public long getId() {
         return id;
     }
@@ -52,5 +54,13 @@ public class MirrorDTO {
 
     public void setSyncStatus(boolean syncStatus) {
         this.syncStatus = syncStatus;
+    }
+
+    public String getGitCloneUrl() {
+        return gitCloneUrl;
+    }
+
+    public void setGitCloneUrl(String gitCloneUrl) {
+        this.gitCloneUrl = gitCloneUrl;
     }
 }
