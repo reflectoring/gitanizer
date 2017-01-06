@@ -67,7 +67,6 @@ public class UpdateMirrorController {
                 return "/mirrors/update";
             }
 
-            mirror.setLastStatusUpdate(dateProvider.now());
             mirror.setDisplayName(form.getRepositoryName());
             mirror.setRemoteSvnUrl(new URL(form.getRemoteSvnUrl()));
             if (!StringUtils.isEmpty(form.getSvnPassword())) {

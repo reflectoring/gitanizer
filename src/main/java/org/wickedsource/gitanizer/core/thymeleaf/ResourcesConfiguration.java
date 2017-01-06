@@ -30,6 +30,7 @@ public class ResourcesConfiguration extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/jQuery/**").addResourceLocations("classpath:/jQuery/");
         registry.addResourceHandler("/templates/**").addResourceLocations("classpath:/templates/");
         registry.addResourceHandler("/codemirror/**").addResourceLocations("classpath:/codemirror/");
+        registry.addResourceHandler("/gitanizer/**").addResourceLocations("classpath:/gitanizer/");
         registry.addResourceHandler("/img/**").addResourceLocations("classpath:/img/");
         registry.addResourceHandler("/git/**/*")
                 .resourceChain(true)

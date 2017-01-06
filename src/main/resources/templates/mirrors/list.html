@@ -47,39 +47,53 @@
                             <tbody>
                             <tr>
                                 <th>Mirror Name</th>
-                                <th>Last Change</th>
-                                <th>Last Status Message</th>
-                                <th>Options</th>
+                                <th>Last Status</th>
+                                <th style="width:100px"></th>
                             </tr>
                             <tr th:each="mirror : ${mirrors}">
                                 <td th:text="${mirror.name}">/gitanizer.git</td>
-                                <td th:text="${#temporals.format(mirror.lastChangeDate, 'yyyy-MM-dd HH:mm:ss')}">
-                                    11-7-2014
-                                </td>
-                                <td th:text="${mirror.lastStatusMessage}">Import Progress 99%</td>
                                 <td>
-                                    <a th:if="${mirror.syncStatus == false}" class="btn btn-default"
-                                       th:href="@{/mirrors/{id}/sync/start(id=${mirror.id})}"><i
-                                            class="fa fa-play"
-                                            title="Start / Continue Synchronization for this Mirror"></i></a>
-                                    <a th:if="${mirror.syncStatus == true}" class="btn btn-default"
-                                       th:href="@{/mirrors/{id}/sync/stop(id=${mirror.id})}"><i
-                                            class="fa fa-pause"
-                                            title="Pause Synchronization for this Mirror"></i></a>
-                                    <a class="btn btn-default"
-                                       th:href="@{/mirrors/{id}/log(id=${mirror.id})}"><i
-                                            class="fa fa-history"
-                                            title="View log file of previous import runs."></i></a>
-                                    <a class="btn btn-default"
-                                       th:href="@{/mirrors/{id}/update(id=${mirror.id})}"><i
-                                            class="fa fa-edit" title="Edit Mirror"></i></a>
-                                    <button type="button" class="btn btn-default" data-toggle="modal"
-                                            th:attr="data-target='#deleteConfirmationModal' + ${mirror.id}"><i
-                                            class="fa fa-trash" title="Delete Mirror"></i></button>
+                                    <span th:text="${#temporals.format(mirror.lastChangeDate, 'yyyy-MM-dd HH:mm:ss')}">11-7-2014</span>
+                                    :&nbsp;
+                                    <span th:text="${mirror.lastStatusMessage}">Import Progress 99%</span></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-default dropdown-toggle"
+                                                data-toggle="dropdown"
+                                                aria-expanded="false">
+                                            Options
+                                            <span class="fa fa-caret-down"></span>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                                            <li><a th:if="${mirror.syncStatus == false}"
+                                                   th:href="@{/mirrors/{id}/sync/start(id=${mirror.id})}">
+                                                <i class="fa fa-play"
+                                                   title="Start / Resume Synchronization"></i>
+                                                Start/Resume Synchronization</a></li>
+                                            <li><a th:if="${mirror.syncStatus == true}"
+                                                   th:href="@{/mirrors/{id}/sync/stop(id=${mirror.id})}">
+                                                <i class="fa fa-pause"
+                                                   title="Pause Synchronization for this Mirror"></i>
+                                                Pause Synchronization</a></li>
+                                            <li><a th:href="@{/mirrors/{id}/log(id=${mirror.id})}">
+                                                <i class="fa fa-history"
+                                                   title="View log file of previous import runs."></i>
+                                                View Log File</a></li>
+                                            <li><a th:href="@{/mirrors/{id}/update(id=${mirror.id})}">
+                                                <i class="fa fa-edit" title="Edit Mirror"></i>
+                                                Edit Mirror</a></li>
+                                            <li><a data-toggle="modal" style="cursor:pointer"
+                                                   th:attr="data-target='#deleteConfirmationModal' + ${mirror.id}">
+                                                <i class="fa fa-trash" title="Delete Mirror"></i>
+                                                Delete Mirror
+                                            </a></li>
+                                        </ul>
+                                    </div>
                                 </td>
                             </tr>
                             </tbody>
                         </table>
+                        <div class="clearfix"/>
                     </div>
                 </div>
             </div>
