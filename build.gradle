@@ -64,6 +64,17 @@ processResources {
     ]
 }
 
+task zip(type: Zip, dependsOn: bootRepackage) {
+    from("build/libs") {
+        include "*.jar"
+    }
+    from("src/main/config") {
+        include "application.properties"
+    }
+}
+
+build.dependsOn(zip)
+
 bootRun {
     classpath = sourceSets.main.runtimeClasspath + configurations.dev
     jvmArgs =
