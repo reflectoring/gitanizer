@@ -14,10 +14,15 @@ public class GitanizerSecurityConfiguration extends WebSecurityConfigurerAdapter
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/actuator").hasAnyRole("ADMIN")
-                .anyRequest().permitAll()
+                .antMatchers("/login").permitAll()
+                .antMatchers("/static/**/*").permitAll()
+                .anyRequest().hasAnyRole("USER")
                 .and()
-                .httpBasic();
+                .formLogin()
+                    /**/.loginPage("/login")
+                    /**/.loginProcessingUrl("/do-login")
+                    /**/.passwordParameter("password")
+                    /**/.usernameParameter("username");
 
         http.csrf().disable();
     }
@@ -25,7 +30,9 @@ public class GitanizerSecurityConfiguration extends WebSecurityConfigurerAdapter
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
-                .withUser("admin").password("admin").roles("ADMIN");
+                .withUser("user").password("user").roles("USER")
+                .and()
+                .withUser("admin").password("admin").roles("USER", "ADMIN");
     }
 
 }

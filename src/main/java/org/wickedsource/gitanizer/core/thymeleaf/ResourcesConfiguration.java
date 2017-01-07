@@ -25,14 +25,14 @@ public class ResourcesConfiguration extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/bootstrap/**").addResourceLocations("classpath:/bootstrap/");
-        registry.addResourceHandler("/AdminLTE/**").addResourceLocations("classpath:/AdminLTE/");
-        registry.addResourceHandler("/jQuery/**").addResourceLocations("classpath:/jQuery/");
-        registry.addResourceHandler("/templates/**").addResourceLocations("classpath:/templates/");
-        registry.addResourceHandler("/codemirror/**").addResourceLocations("classpath:/codemirror/");
-        registry.addResourceHandler("/gitanizer/**").addResourceLocations("classpath:/gitanizer/");
-        registry.addResourceHandler("/clipboardjs/**").addResourceLocations("classpath:/clipboardjs/");
-        registry.addResourceHandler("/img/**").addResourceLocations("classpath:/img/");
+        registry.addResourceHandler("/static/bootstrap/**").addResourceLocations("classpath:/bootstrap/");
+        registry.addResourceHandler("/static/AdminLTE/**").addResourceLocations("classpath:/AdminLTE/");
+        registry.addResourceHandler("/static/jQuery/**").addResourceLocations("classpath:/jQuery/");
+        registry.addResourceHandler("/static/templates/**").addResourceLocations("classpath:/templates/");
+        registry.addResourceHandler("/static/codemirror/**").addResourceLocations("classpath:/codemirror/");
+        registry.addResourceHandler("/static/gitanizer/**").addResourceLocations("classpath:/gitanizer/");
+        registry.addResourceHandler("/static/clipboardjs/**").addResourceLocations("classpath:/clipboardjs/");
+        registry.addResourceHandler("/static/img/**").addResourceLocations("classpath:/img/");
         registry.addResourceHandler("/git/**/*")
                 .resourceChain(true)
                 .addResolver(gitRepositoryResolver);
