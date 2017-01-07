@@ -22,7 +22,11 @@ public class GitanizerSecurityConfiguration extends WebSecurityConfigurerAdapter
                     /**/.loginPage("/login")
                     /**/.loginProcessingUrl("/do-login")
                     /**/.passwordParameter("password")
-                    /**/.usernameParameter("username");
+                    /**/.usernameParameter("username")
+                .and()
+                .logout()
+                    /**/.logoutSuccessUrl("/login")
+                    /**/.logoutUrl("/logout");
 
         http.csrf().disable();
     }
