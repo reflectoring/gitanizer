@@ -7,20 +7,20 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.wickedsource.gitanizer.core.WorkdirConfiguration;
-import org.wickedsource.gitanizer.mirror.git.GitRepositoryResolver;
+import org.wickedsource.gitanizer.mirror.git.PublicGitRepositoryResolver;
+import org.wickedsource.gitanizer.mirror.git.SecureGitRepositoryResolver;
 
 @Configuration
 public class ResourcesConfiguration extends WebMvcConfigurerAdapter {
 
-    private GitRepositoryResolver gitRepositoryResolver;
+    private SecureGitRepositoryResolver secureGitRepositoryResolver;
 
-    private WorkdirConfiguration workdirConfiguration;
+    private PublicGitRepositoryResolver publicGitRepositoryResolver;
 
     @Autowired
-    public ResourcesConfiguration(GitRepositoryResolver gitRepositoryResolver, WorkdirConfiguration workdirConfiguration) {
-        this.gitRepositoryResolver = gitRepositoryResolver;
-        this.workdirConfiguration = workdirConfiguration;
+    public ResourcesConfiguration(SecureGitRepositoryResolver secureGitRepositoryResolver, PublicGitRepositoryResolver publicGitRepositoryResolver) {
+        this.secureGitRepositoryResolver = secureGitRepositoryResolver;
+        this.publicGitRepositoryResolver = publicGitRepositoryResolver;
     }
 
     @Override
@@ -33,9 +33,12 @@ public class ResourcesConfiguration extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/static/gitanizer/**").addResourceLocations("classpath:/gitanizer/");
         registry.addResourceHandler("/static/clipboardjs/**").addResourceLocations("classpath:/clipboardjs/");
         registry.addResourceHandler("/static/img/**").addResourceLocations("classpath:/img/");
-        registry.addResourceHandler("/git/**/*")
+        registry.addResourceHandler("/git/secure/**/*")
                 .resourceChain(true)
-                .addResolver(gitRepositoryResolver);
+                .addResolver(secureGitRepositoryResolver);
+        registry.addResourceHandler("/git/public/**/*")
+                .resourceChain(true)
+                .addResolver(publicGitRepositoryResolver);
     }
 
     @Bean

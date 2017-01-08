@@ -7,12 +7,18 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ElementType.FIELD, ElementType.PARAMETER})
+/**
+ * This validator annotation may be added at class level to mark a group of fields
+ * as belonging together. All fields in that group must together either be null or have a value.
+ */
+@Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = UniqueMirrorNameValidator.class)
-public @interface UniqueMirrorName {
+@Constraint(validatedBy = OptionalGroupsValidator.class)
+public @interface OptionalGroups {
 
-    String message();
+    OptionalGroup[] value();
+
+    String message() default "";
 
     Class<?>[] groups() default {};
 

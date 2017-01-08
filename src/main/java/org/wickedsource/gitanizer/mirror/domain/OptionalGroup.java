@@ -1,6 +1,5 @@
 package org.wickedsource.gitanizer.mirror.domain;
 
-import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -13,7 +12,6 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = OptionalGroupValidator.class)
 public @interface OptionalGroup {
 
     /**

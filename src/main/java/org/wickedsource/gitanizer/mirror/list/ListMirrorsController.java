@@ -37,7 +37,7 @@ public class ListMirrorsController {
             dto.setName(mirror.getDisplayName());
             dto.setLastChangeDate(mirror.getLastStatusUpdate());
             dto.setSyncStatus(mirror.isSyncActive());
-            dto.setGitCloneUrl(getGitCloneUrl(request, mirror.getGitRepositoryName()));
+            dto.setGitCloneUrl(getGitCloneUrl(request, mirror));
             if (mirror.getLastStatusMessage() == null) {
                 dto.setLastStatusMessage("No status yet");
             } else {
@@ -50,8 +50,12 @@ public class ListMirrorsController {
         return "/mirrors/list";
     }
 
-    private String getGitCloneUrl(HttpServletRequest request, String gitRepositoryName) {
-        return String.format("%s://%s:%d/git/%s", request.getScheme(), request.getServerName(), request.getServerPort(), gitRepositoryName);
+    private String getGitCloneUrl(HttpServletRequest request, Mirror mirror) {
+        if (mirror.isGitRepositoryRestricted()) {
+            return String.format("%s://%s:%d/git/secure/%s", request.getScheme(), request.getServerName(), request.getServerPort(), mirror.getGitRepositoryName());
+        } else {
+            return String.format("%s://%s:%d/git/public/%s", request.getScheme(), request.getServerName(), request.getServerPort(), mirror.getGitRepositoryName());
+        }
     }
 
 }

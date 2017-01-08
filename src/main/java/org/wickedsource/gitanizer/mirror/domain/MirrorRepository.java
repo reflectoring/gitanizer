@@ -16,6 +16,18 @@ public interface MirrorRepository extends CrudRepository<Mirror, Long> {
 
     Mirror findByGitRepositoryName(String gitRepositoryName);
 
+    Mirror findByGitUsername(String username);
+
     @Query("select m from Mirror m where lastImportFinished < :date and syncActive = true")
     List<Mirror> findByLastImportFinishedOlderThan(@Param("date") LocalDateTime date);
+
+    int countByGitUsername(String username);
+
+    @Query("select count(m) from Mirror m where gitUsername = :name and id <> :id")
+    int countByGitUsernameExcludeId(@Param("name") String name, @Param("id") long id);
+
+    int countByGitRepositoryName(String gitRepositoryName);
+
+    @Query("select count(m) from Mirror m where gitRepositoryName = :name and id <> :id")
+    int countByGitRepositoryNameExcludeId(@Param("name") String name, @Param("id") long id);
 }

@@ -9,7 +9,7 @@ import javax.validation.ValidatorFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class OptionalGroupValidatorTest {
+public class OptionalGroupsValidatorTest {
 
     private static Validator validator;
 

@@ -34,10 +34,13 @@ public class UpdateMirrorControllerTest extends ControllerTestTemplate {
     @ExpectedDatabase("/singleMirror2.xml")
     public void updateMirror() throws Exception {
         mvc().perform(post("/mirrors/1/update")
-                .param("repositoryName", "gitanizer")
+                .param("displayName", "gitanizer")
                 .param("remoteSvnUrl", "https://github.com/thombergs/gitanizer.git")
                 .param("svnUsername", "newUsername")
-                .param("svnPassword", "newPassword"))
+                .param("svnPassword", "newPassword")
+                .param("gitUsername", "username")
+                .param("gitPassword", "password")
+                .param("gitRepositoryName", "gitanizer.git"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/mirrors/list"));
     }
@@ -47,8 +50,9 @@ public class UpdateMirrorControllerTest extends ControllerTestTemplate {
     @ExpectedDatabase("/singleMirror.xml")
     public void updateMirrorWithValidationError() throws Exception {
         mvc().perform(post("/mirrors/1/update")
-                .param("repositoryName", "")
-                .param("remoteSvnUrl", "invalidUrl"))
+                .param("displayName", "")
+                .param("remoteSvnUrl", "invalidUrl")
+                .param("gitRepositoryName", "coderadar.git"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("/mirrors/update"));
     }
@@ -58,8 +62,9 @@ public class UpdateMirrorControllerTest extends ControllerTestTemplate {
     @ExpectedDatabase("/singleMirror.xml")
     public void editMirrorWithDuplicateName() throws Exception {
         mvc().perform(post("/mirrors/1/update")
-                .param("repositoryName", "coderadar")
-                .param("remoteSvnUrl", "invalidUrl"))
+                .param("displayName", "coderadar")
+                .param("remoteSvnUrl", "invalidUrl")
+                .param("gitRepositoryName", "coderadar.git"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("/mirrors/update"));
     }

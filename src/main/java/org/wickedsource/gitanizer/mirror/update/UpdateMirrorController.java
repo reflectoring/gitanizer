@@ -42,10 +42,13 @@ public class UpdateMirrorController {
 
         UpdateMirrorForm form = new UpdateMirrorForm();
         form.setId(id);
-        form.setRepositoryName(mirror.getDisplayName());
+        form.setDisplayName(mirror.getDisplayName());
         form.setRemoteSvnUrl(mirror.getRemoteSvnUrl().toString());
         form.setSvnPassword(mirror.getSvnPassword());
         form.setSvnUsername(mirror.getSvnUsername());
+        form.setGitUsername(mirror.getGitUsername());
+        form.setGitPassword(mirror.getGitPassword());
+        form.setGitRepositoryName(mirror.getGitRepositoryName());
 
         model.addAttribute("form", form);
         return "/mirrors/update";
@@ -59,16 +62,25 @@ public class UpdateMirrorController {
                 throw new ResourceNotFoundException();
             }
 
-            if (mirrorRepository.countByDisplayNameExcludeId(form.getRepositoryName(), form.getId()) > 0) {
-                bindingResult.rejectValue("repositoryName", "mirrorForm.repositoryName.duplicate");
+            if (mirrorRepository.countByDisplayNameExcludeId(form.getDisplayName(), form.getId()) > 0) {
+                bindingResult.rejectValue("displayName", "mirrorForm.displayName.duplicate");
+            }
+
+            if (mirrorRepository.countByGitRepositoryNameExcludeId(Mirror.getSanitizedGitRepositoryName(form.getGitRepositoryName()), form.getId()) > 0) {
+                bindingResult.rejectValue("gitRepositoryName", "mirrorForm.gitRepositoryName.duplicate");
+            }
+
+            if (mirrorRepository.countByGitUsernameExcludeId(form.getGitUsername(), form.getId()) > 0) {
+                bindingResult.rejectValue("gitUsername", "mirrorForm.gitUsername.duplicate");
             }
 
             if (bindingResult.hasErrors()) {
                 return "/mirrors/update";
             }
 
-            mirror.setDisplayName(form.getRepositoryName());
+            mirror.setDisplayName(form.getDisplayName());
             mirror.setRemoteSvnUrl(new URL(form.getRemoteSvnUrl()));
+            mirror.setGitRepositoryName(form.getGitRepositoryName());
             if (!StringUtils.isEmpty(form.getSvnPassword())) {
                 mirror.setSvnPassword(form.getSvnPassword());
             } else {
@@ -78,6 +90,16 @@ public class UpdateMirrorController {
                 mirror.setSvnUsername(form.getSvnUsername());
             } else {
                 mirror.setSvnUsername(null);
+            }
+            if (!StringUtils.isEmpty(form.getGitPassword())) {
+                mirror.setGitPassword(form.getGitPassword());
+            } else {
+                mirror.setGitPassword(null);
+            }
+            if (!StringUtils.isEmpty(form.getGitUsername())) {
+                mirror.setGitUsername(form.getGitUsername());
+            } else {
+                mirror.setGitUsername(null);
             }
             // attribute "workdirName" is not updated, so that the workdir remains intact
 

@@ -1,5 +1,7 @@
 package org.wickedsource.gitanizer.mirror.domain;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.persistence.*;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -27,6 +29,12 @@ public class Mirror {
 
     @Column
     private String svnPassword;
+
+    @Column(unique = true)
+    private String gitUsername;
+
+    @Column
+    private String gitPassword;
 
     @Column(nullable = false)
     private LocalDateTime lastStatusUpdate;
@@ -60,7 +68,6 @@ public class Mirror {
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
-        this.gitRepositoryName = displayName.replaceAll("\\W", "-") + ".git";
     }
 
     public URL getRemoteSvnUrl() {
@@ -107,8 +114,8 @@ public class Mirror {
         return gitRepositoryName;
     }
 
-    private void setGitRepositoryName(String gitRepositoryName) {
-        this.gitRepositoryName = gitRepositoryName;
+    public void setGitRepositoryName(String gitRepositoryName) {
+        this.gitRepositoryName = getSanitizedGitRepositoryName(gitRepositoryName);
     }
 
     public LocalDateTime getLastImportFinished() {
@@ -133,5 +140,36 @@ public class Mirror {
 
     public void setSvnPassword(String svnPassword) {
         this.svnPassword = svnPassword;
+    }
+
+    public String getGitUsername() {
+        return gitUsername;
+    }
+
+    public void setGitUsername(String gitUsername) {
+        this.gitUsername = gitUsername;
+    }
+
+    public String getGitPassword() {
+        return gitPassword;
+    }
+
+    public void setGitPassword(String gitPassword) {
+        this.gitPassword = gitPassword;
+    }
+
+    public static String getSanitizedGitRepositoryName(String gitRepositoryName) {
+        if (!gitRepositoryName.endsWith(".git")) {
+            gitRepositoryName += ".git";
+        }
+        return gitRepositoryName;
+    }
+
+    /**
+     * Returns true if the git repository is supposed to have restricted access (i.e. a git username
+     * and password are specified).
+     */
+    public boolean isGitRepositoryRestricted() {
+        return !StringUtils.isEmpty(this.gitUsername) || !StringUtils.isEmpty(this.gitPassword);
     }
 }

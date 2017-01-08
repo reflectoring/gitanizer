@@ -1,6 +1,7 @@
 package org.wickedsource.gitanizer.mirror.domain;
 
-@OptionalGroup(fieldNames = {"field1", "field2"}, message = "Invalid OptionalGroup!")
+@OptionalGroups(
+        @OptionalGroup(fieldNames = {"field1", "field2"}, message = "Invalid OptionalGroup!"))
 public class OptionalGroupTestObject {
 
     private String field1;
