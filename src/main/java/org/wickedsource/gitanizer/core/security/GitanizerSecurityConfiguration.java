@@ -1,21 +1,12 @@
 package org.wickedsource.gitanizer.core.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.wickedsource.gitanizer.mirror.domain.Mirror;
 import org.wickedsource.gitanizer.mirror.domain.MirrorRepository;
-
-import java.util.Arrays;
-import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -26,28 +17,6 @@ public class GitanizerSecurityConfiguration {
     @Autowired
     public GitanizerSecurityConfiguration(MirrorRepository mirrorRepository) {
         this.mirrorRepository = mirrorRepository;
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return username -> {
-            // UI users
-            if (username.equals("admin")) {
-                return new User("admin", "admin", Arrays.asList(new SimpleGrantedAuthority("ADMIN"), new SimpleGrantedAuthority("USER")));
-            }
-
-            if (username.equals("user")) {
-                return new User("user", "user", Arrays.asList(new SimpleGrantedAuthority("USER")));
-            }
-
-            // Git users
-            Mirror mirror = mirrorRepository.findByGitUsername(username);
-            if (mirror == null) {
-                throw new UsernameNotFoundException(String.format("User '%s' not found!", username));
-            }
-
-            return new User(username, mirror.getGitPassword(), Collections.singleton(new SimpleGrantedAuthority(getAuthorityNameForMirror(mirror.getId()))));
-        };
     }
 
     /**

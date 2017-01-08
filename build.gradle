@@ -85,6 +85,8 @@ bootRun {
                     "-Dgitanizer.git.executable.path=git",
                     "-Dgitanizer.importTasks.maxThreads=5",
                     "-Dgitanizer.importTasks.intervalInSeconds=10",
+                    "-Dgitanizer.users.admin=admin,USER,ADMIN",
+                    "-Dgitanizer.users.user=user,USER",
 
                     // debugging
                     "-Xdebug",

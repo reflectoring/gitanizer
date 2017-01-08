@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.wickedsource.gitanizer.core.DateProvider;
 import org.wickedsource.gitanizer.core.ResourceNotFoundException;
+import org.wickedsource.gitanizer.core.security.GitanizerUserDetailsService;
 import org.wickedsource.gitanizer.mirror.domain.Mirror;
 import org.wickedsource.gitanizer.mirror.domain.MirrorRepository;
 
@@ -25,12 +25,12 @@ public class UpdateMirrorController {
 
     private MirrorRepository mirrorRepository;
 
-    private DateProvider dateProvider;
+    private GitanizerUserDetailsService userDetailsService;
 
     @Autowired
-    public UpdateMirrorController(MirrorRepository mirrorRepository, DateProvider dateProvider) {
+    public UpdateMirrorController(MirrorRepository mirrorRepository, GitanizerUserDetailsService userDetailsService) {
         this.mirrorRepository = mirrorRepository;
-        this.dateProvider = dateProvider;
+        this.userDetailsService = userDetailsService;
     }
 
     @GetMapping(value = "/mirrors/{id}/update")
@@ -70,7 +70,7 @@ public class UpdateMirrorController {
                 bindingResult.rejectValue("gitRepositoryName", "mirrorForm.gitRepositoryName.duplicate");
             }
 
-            if (mirrorRepository.countByGitUsernameExcludeId(form.getGitUsername(), form.getId()) > 0) {
+            if (userDetailsService.usernameExists(form.getGitUsername(), form.getId())) {
                 bindingResult.rejectValue("gitUsername", "mirrorForm.gitUsername.duplicate");
             }
 

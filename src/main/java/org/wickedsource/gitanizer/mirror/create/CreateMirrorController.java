@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.wickedsource.gitanizer.core.DateProvider;
+import org.wickedsource.gitanizer.core.security.GitanizerUserDetailsService;
 import org.wickedsource.gitanizer.mirror.domain.Mirror;
 import org.wickedsource.gitanizer.mirror.domain.MirrorRepository;
 
@@ -26,10 +27,13 @@ public class CreateMirrorController {
 
     private DateProvider dateProvider;
 
+    private GitanizerUserDetailsService userDetailsService;
+
     @Autowired
-    public CreateMirrorController(MirrorRepository mirrorRepository, DateProvider dateProvider) {
+    public CreateMirrorController(MirrorRepository mirrorRepository, DateProvider dateProvider, GitanizerUserDetailsService userDetailsService) {
         this.mirrorRepository = mirrorRepository;
         this.dateProvider = dateProvider;
+        this.userDetailsService = userDetailsService;
     }
 
     @GetMapping(value = "/mirrors/create")
@@ -50,7 +54,7 @@ public class CreateMirrorController {
                 bindingResult.rejectValue("gitRepositoryName", "mirrorForm.gitRepositoryName.duplicate");
             }
 
-            if (mirrorRepository.countByGitUsername(form.getGitUsername()) > 0) {
+            if (userDetailsService.usernameExists(form.getGitUsername())) {
                 bindingResult.rejectValue("gitUsername", "mirrorForm.gitUsername.duplicate");
             }
 
