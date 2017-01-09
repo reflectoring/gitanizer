@@ -24,7 +24,6 @@ public class SecureGitRepositoryResolver extends AbstractGitRepositoryResolver {
     }
 
     protected boolean isAuthorizedForMirror(Mirror mirror) {
-        String role = GitanizerSecurityConfiguration.getAuthorityNameForMirror(mirror.getId());
         SecurityContext securityContext = SecurityContextHolder.getContext();
         if (securityContext == null) {
             return false;
@@ -34,8 +33,9 @@ public class SecureGitRepositoryResolver extends AbstractGitRepositoryResolver {
             return false;
         }
 
+        String requiredRole = GitanizerSecurityConfiguration.getAuthorityNameForMirror(mirror.getId());
         for (GrantedAuthority auth : authentication.getAuthorities()) {
-            if (role.equals(auth.getAuthority())) {
+            if (requiredRole.equals(auth.getAuthority())) {
                 return true;
             }
         }
