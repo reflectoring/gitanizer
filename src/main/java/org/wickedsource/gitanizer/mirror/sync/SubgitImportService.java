@@ -136,7 +136,7 @@ public class SubgitImportService {
             taskMap.put(mirror.getId(), new ImportTask(future, logOutputStream));
             counterService.increment(COUNTER_QUEUED_TASKS);
         } catch (IOException e) {
-            throw new IllegalStateException("Error writing import log into file!");
+            throw new IllegalStateException("Error writing import log into file!", e);
         }
     }
 
