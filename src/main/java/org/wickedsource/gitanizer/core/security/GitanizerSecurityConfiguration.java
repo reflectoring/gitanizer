@@ -6,6 +6,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.wickedsource.gitanizer.mirror.domain.MirrorRepository;
 
 @Configuration
@@ -36,12 +38,18 @@ public class GitanizerSecurityConfiguration {
                     .and()
                     .formLogin()
                     /**/.loginPage("/login")
+                    /**/.failureUrl("/login-error")
                     /**/.loginProcessingUrl("/do-login")
                     /**/.passwordParameter("password")
                     /**/.usernameParameter("username")
                     .and()
                     .logout()
                     /**/.logoutSuccessUrl("/login")
+                    .addLogoutHandler((request, response, authentication) -> {
+                        request.getSession().invalidate();
+                        SecurityContext securityContext = SecurityContextHolder.getContext();
+                        securityContext.setAuthentication(null);
+                    })
                     /**/.logoutUrl("/logout");
 
             http.csrf().disable();

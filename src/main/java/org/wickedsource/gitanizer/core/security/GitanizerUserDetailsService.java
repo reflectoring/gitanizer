@@ -60,7 +60,8 @@ public class GitanizerUserDetailsService implements UserDetailsService {
 
         // UI user that logs in via login form
         if (configuredUsers.containsKey(username)) {
-            return configuredUsers.get(username);
+            // returning a copy since the password is set to null by Spring Security
+            return copy(configuredUsers.get(username));
         }
 
         // Technical user that accesses Git repositories via Basic Authentication
@@ -70,6 +71,10 @@ public class GitanizerUserDetailsService implements UserDetailsService {
         }
 
         return new User(username, mirror.getGitPassword(), Collections.singleton(new SimpleGrantedAuthority(getAuthorityNameForMirror(mirror.getId()))));
+    }
+
+    private User copy(UserDetails user) {
+        return new User(user.getUsername(), user.getPassword(), user.getAuthorities());
     }
 
     private Map<String, String> getAllUserProperties(Environment env) {
