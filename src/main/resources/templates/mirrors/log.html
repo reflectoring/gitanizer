@@ -4,7 +4,7 @@
       layout:decorator="layouts/layout">
 
 <th:block layout:fragment="css">
-    <link rel="stylesheet" th:href="@{/codemirror/css/codemirror.css}"/>
+    <link rel="stylesheet" th:href="@{/static/codemirror/css/codemirror.css}"/>
 </th:block>
 
 
@@ -36,7 +36,7 @@
 </th:block>
 
 <th:block layout:fragment="js">
-    <script th:src="@{/codemirror/js/codemirror.js}"></script>
+    <script th:src="@{/static/codemirror/js/codemirror.js}"></script>
     <script language="javascript">
         var textarea = document.getElementById("logarea");
         var editor = CodeMirror.fromTextArea(textarea, {
