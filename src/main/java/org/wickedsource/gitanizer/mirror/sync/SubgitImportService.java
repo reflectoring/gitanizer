@@ -125,6 +125,7 @@ public class SubgitImportService {
                     logOutputStream.close();
                 } catch (Exception e) {
                     String message = String.format("IOException during async execution of subgit import command: %s", importCommand);
+                    statusMessageService.error(mirror.getId());
                     logger.error(message, e);
                     throw new IllegalStateException(message, e);
                 } finally {

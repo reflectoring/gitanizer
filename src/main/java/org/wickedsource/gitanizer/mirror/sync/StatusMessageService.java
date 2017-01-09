@@ -50,6 +50,15 @@ public class StatusMessageService {
     }
 
     /**
+     * Save a status message that says an error occurred.
+     *
+     * @param mirrorId ID of the mirror for which to store the status message.
+     */
+    public void error(Long mirrorId) {
+        saveMessage(mirrorId, "Error during import. Please check the log.", true);
+    }
+
+    /**
      * Save a status message that describes that the synchronization process is currently paused.
      *
      * @param mirrorId ID of the mirror for which to store the status message.
