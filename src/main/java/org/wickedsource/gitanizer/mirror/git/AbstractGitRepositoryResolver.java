@@ -42,7 +42,7 @@ public abstract class AbstractGitRepositoryResolver extends AbstractResourceReso
             throw new ForbiddenException();
         }
 
-        Path gitDir = workdirConfiguration.getGitDir(mirror.getWorkdirName());
+        Path gitDir = workdirConfiguration.getGitDir(mirror.getId());
         String filepath = requestPath.replace(gitRepositoryName + "/", "");
         Path fileToServe = gitDir.resolve(filepath);
 

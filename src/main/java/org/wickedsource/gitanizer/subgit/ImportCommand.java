@@ -5,14 +5,10 @@ import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.Executor;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 /**
  * Wrapper around the subgit import command that allows to create a local git mirror of a remote
@@ -35,8 +31,6 @@ public class ImportCommand extends SubgitCommand {
     private String workingDirectory;
 
     private String gitPath;
-
-    private Logger logger = LoggerFactory.getLogger(ImportCommand.class);
 
     public ImportCommand(String subgitPath, String gitPath) {
         super(subgitPath);
@@ -86,18 +80,9 @@ public class ImportCommand extends SubgitCommand {
     }
 
     public void execute() throws IOException {
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         try {
-            if (this.out != null) {
-                out.write("----------------------\r\n".getBytes());
-                out.write(String.format("%s - Starting subgit import run\r\n", formatter.format(LocalDateTime.now())).getBytes());
-            }
             subgitImport();
             updateServerInfo();
-            if (this.out != null) {
-                out.write(String.format("%s - Finished subgit import run\r\n", formatter.format(LocalDateTime.now())).getBytes());
-                out.write("----------------------\r\n".getBytes());
-            }
         } catch (Exception e) {
             // TODO: this exception should be logged into the import log file
             out.close();

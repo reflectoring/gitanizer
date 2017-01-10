@@ -3,6 +3,8 @@ package org.wickedsource.gitanizer.core;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.wickedsource.gitanizer.mirror.domain.Mirror;
+import org.wickedsource.gitanizer.mirror.domain.MirrorRepository;
 
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
@@ -13,8 +15,11 @@ public class WorkdirConfiguration {
 
     private Path applicationWorkdir;
 
+    private MirrorRepository mirrorRepository;
+
     @Autowired
-    public WorkdirConfiguration(Environment environment) {
+    public WorkdirConfiguration(Environment environment, MirrorRepository mirrorRepository) {
+        this.mirrorRepository = mirrorRepository;
         initWorkdirPathFromEnvironment(environment);
     }
 
@@ -34,14 +39,13 @@ public class WorkdirConfiguration {
     }
 
     /**
-     * Returns a directory below the application workdir which is defined by the environment variable 'gitanizer.workdir'.
-     * The name passed into this method is sanitized. If a sub directory with the sanitized name already exists,
-     * the existing folder is returned. If it doesn't exist, a new folder is created and then returned.
+     * Returns the path to the working directory for the specified mirror.
      *
-     * @param workdirName the name of the sub directory. Characters that are not allowed in file names are removed from it.
+     * @param mirrorId ID of the mirror whose working directory to return
      */
-    public Path getWorkdir(String workdirName) {
-        String sanitizedFilename = sanitizeFilename(workdirName);
+    public Path getWorkdir(long mirrorId) {
+        Mirror mirror = mirrorRepository.findOne(mirrorId);
+        String sanitizedFilename = sanitizeFilename(mirror.getWorkdirName());
         if (sanitizedFilename.equals("")) {
             throw new IllegalArgumentException("The given filename must contain at least one character that is allowed in file names!");
         }
@@ -50,12 +54,20 @@ public class WorkdirConfiguration {
         return subWorkdir;
     }
 
+    /**
+     * Returns the main application working directory in which all mirror working directories are contained.
+     */
     public Path getApplicationWorkdir() {
         return applicationWorkdir;
     }
 
-    public Path getGitDir(String workdirName) {
-        return getWorkdir(workdirName).resolve("git");
+    /**
+     * Returns the git directory within the mirror's working directory.
+     *
+     * @param mirrorId ID of the mirror whose git directory to return.
+     */
+    public Path getGitDir(long mirrorId) {
+        return getWorkdir(mirrorId).resolve("git");
     }
 
     private String sanitizeFilename(String filename) {

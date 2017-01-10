@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 import org.wickedsource.gitanizer.core.SubgitConfiguration;
 import org.wickedsource.gitanizer.core.WorkdirConfiguration;
 import org.wickedsource.gitanizer.mirror.domain.Mirror;
+import org.wickedsource.gitanizer.mirror.sync.logging.ImportLoggerFactory;
+import org.wickedsource.gitanizer.mirror.sync.logging.LoggingOutputStream;
 import org.wickedsource.gitanizer.subgit.ImportCommand;
 
 import javax.annotation.PreDestroy;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -50,16 +50,19 @@ public class SubgitImportService {
 
     private CounterService counterService;
 
+    private ImportLoggerFactory importLoggerFactory;
+
     private Logger logger = LoggerFactory.getLogger(SubgitImportService.class);
 
     private static final int MAX_THREADS_DEFAULT = 5;
 
     @Autowired
-    public SubgitImportService(StatusMessageService statusMessageService, SubgitConfiguration subgitConfiguration, WorkdirConfiguration workdirConfiguration, CounterService counterService, GaugeService gaugeService, Environment environment) {
+    public SubgitImportService(StatusMessageService statusMessageService, SubgitConfiguration subgitConfiguration, WorkdirConfiguration workdirConfiguration, CounterService counterService, GaugeService gaugeService, Environment environment, ImportLoggerFactory importLoggerFactory) {
         this.statusMessageService = statusMessageService;
         this.subgitConfiguration = subgitConfiguration;
         this.workdirConfiguration = workdirConfiguration;
         this.counterService = counterService;
+        this.importLoggerFactory = importLoggerFactory;
         int maxParallelTasks = MAX_THREADS_DEFAULT;
         String maxParallelTasksString = environment.getProperty("gitanizer.importTasks.maxThreads");
         if (maxParallelTasksString != null) {
@@ -97,48 +100,46 @@ public class SubgitImportService {
     public void startImport(Mirror mirror) {
         Path subgitPath = subgitConfiguration.getSubgitExecutable();
         Path gitPath = subgitConfiguration.getGitExecutable();
-        Path workdir = workdirConfiguration.getWorkdir(mirror.getWorkdirName());
-        Path gitDir = workdirConfiguration.getGitDir(mirror.getWorkdirName());
+        Path workdir = workdirConfiguration.getWorkdir(mirror.getId());
+        Path gitDir = workdirConfiguration.getGitDir(mirror.getId());
 
-        try {
-            StatusMessageListener listener = new StatusMessageListener(mirror.getId(), statusMessageService);
+        StatusMessageListener listener = new StatusMessageListener(mirror.getId(), statusMessageService);
 
-            OutputStream logOutputStream = new FileOutputStream(getLogFile(mirror).toFile(), true);
-            ImportCommand importCommand = new ImportCommand(subgitPath.toString(), gitPath.toString())
-                    .withTargetGitPath(gitDir.toString())
-                    .withPassword(mirror.getSvnPassword())
-                    .withUsername(mirror.getSvnUsername())
-                    .withSourceSvnUrl(mirror.getRemoteSvnUrl().toString())
-                    .withListener(listener)
-                    .withLogOutputStream(logOutputStream)
-                    .withWorkingDirectory(workdir.toString());
+        Logger importLogger = importLoggerFactory.getImportLoggerForMirror(mirror.getId(), "subgit");
+        OutputStream logOutputStream = new LoggingOutputStream(importLogger);
 
-            statusMessageService.syncStarted(mirror.getId());
+        ImportCommand importCommand = new ImportCommand(subgitPath.toString(), gitPath.toString())
+                .withTargetGitPath(gitDir.toString())
+                .withPassword(mirror.getSvnPassword())
+                .withUsername(mirror.getSvnUsername())
+                .withSourceSvnUrl(mirror.getRemoteSvnUrl().toString())
+                .withListener(listener)
+                .withLogOutputStream(logOutputStream)
+                .withWorkingDirectory(workdir.toString());
 
-            Runnable task = () -> {
-                try {
-                    counterService.decrement(COUNTER_QUEUED_TASKS);
-                    counterService.increment(COUNTER_ACTIVE_TASKS);
-                    importCommand.execute();
-                    statusMessageService.upToDate(mirror.getId());
-                    taskMap.remove(mirror.getId());
-                    logOutputStream.close();
-                } catch (Exception e) {
-                    String message = String.format("IOException during async execution of subgit import command: %s", importCommand);
-                    statusMessageService.error(mirror.getId());
-                    logger.error(message, e);
-                    throw new IllegalStateException(message, e);
-                } finally {
-                    counterService.decrement(COUNTER_ACTIVE_TASKS);
-                }
-            };
+        statusMessageService.syncStarted(mirror.getId());
 
-            Future future = executor.submit(task);
-            taskMap.put(mirror.getId(), new ImportTask(future, logOutputStream));
-            counterService.increment(COUNTER_QUEUED_TASKS);
-        } catch (IOException e) {
-            throw new IllegalStateException("Error writing import log into file!", e);
-        }
+        Runnable task = () -> {
+            try {
+                counterService.decrement(COUNTER_QUEUED_TASKS);
+                counterService.increment(COUNTER_ACTIVE_TASKS);
+                importCommand.execute();
+                statusMessageService.upToDate(mirror.getId());
+                taskMap.remove(mirror.getId());
+            } catch (Exception e) {
+                String message = String.format("IOException during async execution of subgit import command: %s", importCommand);
+                statusMessageService.error(mirror.getId(), e);
+                logger.error(message, e);
+                throw new IllegalStateException(message, e);
+            } finally {
+                IOUtils.closeQuietly(logOutputStream);
+                counterService.decrement(COUNTER_ACTIVE_TASKS);
+            }
+        };
+
+        Future future = executor.submit(task);
+        taskMap.put(mirror.getId(), new ImportTask(future, logOutputStream));
+        counterService.increment(COUNTER_QUEUED_TASKS);
     }
 
     /**
@@ -148,7 +149,7 @@ public class SubgitImportService {
      * @return Path object pointing to the logfile.
      */
     public Path getLogFile(Mirror mirror) {
-        Path workdir = workdirConfiguration.getWorkdir(mirror.getWorkdirName());
+        Path workdir = workdirConfiguration.getWorkdir(mirror.getId());
         String logFileName = String.format("%s/subgit-import.log", workdir);
         return Paths.get(logFileName);
     }

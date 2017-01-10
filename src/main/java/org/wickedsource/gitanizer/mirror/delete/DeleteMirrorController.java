@@ -83,11 +83,11 @@ public class DeleteMirrorController {
         if (mirror == null) {
             throw new ResourceNotFoundException();
         }
+        Path workdir = workdirConfiguration.getWorkdir(mirror.getId());
         mirrorRepository.delete(id);
         if (subgitImportService.isImportRunning(mirror.getId())) {
             subgitImportService.cancelImport(mirror.getId());
         }
-        Path workdir = workdirConfiguration.getWorkdir(mirror.getWorkdirName());
         deleteWorkdirAsync(workdir);
         return "redirect:/mirrors/list";
     }
