@@ -14,7 +14,7 @@ import org.wickedsource.gitanizer.core.ResourceNotFoundException;
 import org.wickedsource.gitanizer.core.WorkdirConfiguration;
 import org.wickedsource.gitanizer.mirror.domain.Mirror;
 import org.wickedsource.gitanizer.mirror.domain.MirrorRepository;
-import org.wickedsource.gitanizer.mirror.sync.SubgitImportService;
+import org.wickedsource.gitanizer.mirror.importing.SubgitImportService;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -84,10 +84,10 @@ public class DeleteMirrorController {
             throw new ResourceNotFoundException();
         }
         Path workdir = workdirConfiguration.getWorkdir(mirror.getId());
-        mirrorRepository.delete(id);
         if (subgitImportService.isImportRunning(mirror.getId())) {
             subgitImportService.cancelImport(mirror.getId());
         }
+        mirrorRepository.delete(id);
         deleteWorkdirAsync(workdir);
         return "redirect:/mirrors/list";
     }

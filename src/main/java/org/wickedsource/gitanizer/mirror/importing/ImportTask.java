@@ -1,4 +1,4 @@
-package org.wickedsource.gitanizer.mirror.sync;
+package org.wickedsource.gitanizer.mirror.importing;
 
 import java.io.OutputStream;
 import java.util.concurrent.Future;

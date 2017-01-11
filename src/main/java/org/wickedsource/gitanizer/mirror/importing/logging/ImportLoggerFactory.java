@@ -1,4 +1,4 @@
-package org.wickedsource.gitanizer.mirror.sync.logging;
+package org.wickedsource.gitanizer.mirror.importing.logging;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;

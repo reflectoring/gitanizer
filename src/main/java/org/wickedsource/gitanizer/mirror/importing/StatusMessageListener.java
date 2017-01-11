@@ -1,4 +1,4 @@
-package org.wickedsource.gitanizer.mirror.sync;
+package org.wickedsource.gitanizer.mirror.importing;
 
 import org.wickedsource.gitanizer.subgit.ImportCommandListener;
 

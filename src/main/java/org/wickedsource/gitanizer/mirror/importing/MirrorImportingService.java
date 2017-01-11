@@ -1,4 +1,4 @@
-package org.wickedsource.gitanizer.mirror.sync;
+package org.wickedsource.gitanizer.mirror.importing;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 @ConditionalOnProperty(value = "gitanizer.scheduling.disabled", havingValue = "false", matchIfMissing = true)
-public class MirrorSyncService {
+public class MirrorImportingService {
 
     public static final int DEFAULT_INTERVAL = 5 * 60;
 
@@ -24,18 +24,16 @@ public class MirrorSyncService {
 
     private MirrorRepository mirrorRepository;
 
-    private Environment environment;
-
     private int intervalInSeconds = DEFAULT_INTERVAL;
 
-    private Logger logger = LoggerFactory.getLogger(MirrorSyncService.class);
+    private Logger logger = LoggerFactory.getLogger(MirrorImportingService.class);
 
     @Autowired
-    public MirrorSyncService(SubgitImportService subgitImportService, MirrorRepository mirrorRepository, Environment environment) {
+    public MirrorImportingService(SubgitImportService subgitImportService, MirrorRepository mirrorRepository, Environment environment) {
         this.subgitImportService = subgitImportService;
         this.mirrorRepository = mirrorRepository;
-        this.environment = environment;
-        String importIntervalString = this.environment.getProperty("gitanizer.importTasks.intervalInSeconds");
+        Environment environment1 = environment;
+        String importIntervalString = environment1.getProperty("gitanizer.importTasks.intervalInSeconds");
         if (importIntervalString != null) {
             try {
                 intervalInSeconds = Integer.valueOf(importIntervalString);
@@ -50,7 +48,7 @@ public class MirrorSyncService {
      * sync status is active.
      */
     @Scheduled(fixedDelay = 5000)
-    public void syncMirrors() {
+    public void startImportJobs() {
         LocalDateTime dateThreshold = LocalDateTime.now();
         dateThreshold.minusSeconds(intervalInSeconds);
         List<Mirror> eligibleMirrors = mirrorRepository.findByLastImportFinishedOlderThan(dateThreshold);

@@ -1,11 +1,11 @@
-package org.wickedsource.gitanizer.mirror.sync;
+package org.wickedsource.gitanizer.mirror.importing;
 
 import ch.qos.logback.classic.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.wickedsource.gitanizer.mirror.domain.Mirror;
 import org.wickedsource.gitanizer.mirror.domain.MirrorRepository;
-import org.wickedsource.gitanizer.mirror.sync.logging.ImportLoggerFactory;
+import org.wickedsource.gitanizer.mirror.importing.logging.ImportLoggerFactory;
 
 import java.time.LocalDateTime;
 

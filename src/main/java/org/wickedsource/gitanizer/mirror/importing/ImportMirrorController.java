@@ -1,4 +1,4 @@
-package org.wickedsource.gitanizer.mirror.sync;
+package org.wickedsource.gitanizer.mirror.importing;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,14 +11,14 @@ import org.wickedsource.gitanizer.mirror.domain.MirrorRepository;
 
 @Controller
 @Transactional
-public class SynchronizeMirrorController {
+public class ImportMirrorController {
 
     private MirrorRepository mirrorRepository;
 
     private SubgitImportService subgitImportService;
 
     @Autowired
-    public SynchronizeMirrorController(MirrorRepository mirrorRepository, SubgitImportService subgitImportService) {
+    public ImportMirrorController(MirrorRepository mirrorRepository, SubgitImportService subgitImportService) {
         this.mirrorRepository = mirrorRepository;
         this.subgitImportService = subgitImportService;
     }
@@ -30,7 +30,7 @@ public class SynchronizeMirrorController {
      * @return redirect to the mirror list view.
      */
     @GetMapping("/mirrors/{id}/sync/start")
-    public String startSynchronization(@PathVariable long id) {
+    public String startImporting(@PathVariable long id) {
         Mirror mirror = mirrorRepository.findOne(id);
         if (mirror == null) {
             throw new ResourceNotFoundException();
@@ -51,7 +51,7 @@ public class SynchronizeMirrorController {
      * @return redirect to the mirror list view.
      */
     @GetMapping("/mirrors/{id}/sync/stop")
-    public String stopSynchronization(@PathVariable long id) {
+    public String stopImporting(@PathVariable long id) {
         Mirror mirror = mirrorRepository.findOne(id);
         if (mirror == null) {
             throw new ResourceNotFoundException();
@@ -62,6 +62,7 @@ public class SynchronizeMirrorController {
         }
 
         mirror.setSyncActive(false);
+        mirrorRepository.save(mirror);
         return "redirect:/mirrors/list";
     }
 

@@ -1,4 +1,4 @@
-package org.wickedsource.gitanizer.mirror.sync.logging;
+package org.wickedsource.gitanizer.mirror.importing.logging;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

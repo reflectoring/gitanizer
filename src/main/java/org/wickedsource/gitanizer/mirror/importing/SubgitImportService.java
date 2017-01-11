@@ -1,4 +1,4 @@
-package org.wickedsource.gitanizer.mirror.sync;
+package org.wickedsource.gitanizer.mirror.importing;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 import org.wickedsource.gitanizer.core.SubgitConfiguration;
 import org.wickedsource.gitanizer.core.WorkdirConfiguration;
 import org.wickedsource.gitanizer.mirror.domain.Mirror;
-import org.wickedsource.gitanizer.mirror.sync.logging.ImportLoggerFactory;
-import org.wickedsource.gitanizer.mirror.sync.logging.LoggingOutputStream;
+import org.wickedsource.gitanizer.mirror.importing.logging.ImportLoggerFactory;
+import org.wickedsource.gitanizer.mirror.importing.logging.LoggingOutputStream;
 import org.wickedsource.gitanizer.subgit.ImportCommand;
 
 import javax.annotation.PreDestroy;
