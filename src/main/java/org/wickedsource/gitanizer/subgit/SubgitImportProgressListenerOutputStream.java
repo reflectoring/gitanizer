@@ -9,9 +9,9 @@ import java.util.regex.Pattern;
 
 /**
  * An OutputStream that checks for a percentage value in the output and reports
- * that percentage to a registered progress monitor.
+ * that percentage to a registered progress listener.
  */
-public class ProgressListenerOutputStream extends OutputStream {
+public class SubgitImportProgressListenerOutputStream extends OutputStream {
 
     private StringBuilder currentContent = new StringBuilder();
 
@@ -19,13 +19,8 @@ public class ProgressListenerOutputStream extends OutputStream {
 
     private List<ImportCommandListener> progressListeners = new ArrayList<>();
 
-    private OutputStream out;
-
     @Override
     public void write(int b) throws IOException {
-        if (this.out != null) {
-            this.out.write(b);
-        }
         currentContent.append(new String(new byte[]{(byte) b}));
         Matcher matcher = PROGRESS_PATTERN.matcher(currentContent);
         if (matcher.find()) {
@@ -41,24 +36,13 @@ public class ProgressListenerOutputStream extends OutputStream {
      * Register a listener that will be notified each time a progress event was
      * registered in this OutputStream.
      */
-    public void registerProgressListener(ImportCommandListener progressListener) {
+    public SubgitImportProgressListenerOutputStream withProgressListener(ImportCommandListener progressListener) {
         this.progressListeners.add(progressListener);
-    }
-
-    /**
-     * Registers an OutputStream that receives all output written into this ProgessListenerOutputStream.
-     *
-     * @param out the OutputStream to copy all output into.
-     */
-    public void registerOutputStream(OutputStream out) {
-        this.out = out;
+        return this;
     }
 
     @Override
     public void close() throws IOException {
         super.close();
-        if (out != null) {
-            out.close();
-        }
     }
 }

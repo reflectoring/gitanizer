@@ -114,8 +114,8 @@ public class SubgitImportService {
                 .withUsername(mirror.getSvnUsername())
                 .withSourceSvnUrl(mirror.getRemoteSvnUrl().toString())
                 .withListener(listener)
-                .withLogOutputStream(logOutputStream)
-                .withWorkingDirectory(workdir.toString());
+                .withWorkingDirectory(workdir.toString())
+                .withLogger(importLogger);
 
         statusMessageService.syncStarted(mirror.getId());
 
@@ -127,10 +127,8 @@ public class SubgitImportService {
                 statusMessageService.upToDate(mirror.getId());
                 taskMap.remove(mirror.getId());
             } catch (Exception e) {
-                String message = String.format("IOException during async execution of subgit import command: %s", importCommand);
-                statusMessageService.error(mirror.getId(), e);
-                logger.error(message, e);
-                throw new IllegalStateException(message, e);
+                statusMessageService.error(mirror.getId());
+                logger.error(String.format("IOException during async execution of subgit import command: %s", importCommand), e);
             } finally {
                 IOUtils.closeQuietly(logOutputStream);
                 counterService.decrement(COUNTER_ACTIVE_TASKS);
@@ -168,8 +166,10 @@ public class SubgitImportService {
                 IOUtils.closeQuietly(task.getLogOutputStream());
                 counterService.decrement(COUNTER_ACTIVE_TASKS);
                 statusMessageService.paused(mirrorId);
+                taskMap.remove(mirrorId);
+            } else {
+                logger.warn("Could not cancel ImportTask for mirror {}", mirrorId);
             }
-            taskMap.remove(mirrorId);
         }
     }
 

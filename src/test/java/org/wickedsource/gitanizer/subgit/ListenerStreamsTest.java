@@ -15,9 +15,9 @@ public class ListenerStreamsTest {
 
     @Test
     public void errorEventsAreReported() throws IOException {
-        ErrorListenerOutputStream errorOutputStream = new ErrorListenerOutputStream();
+        SubgitImportErrorListenerOutputStream errorOutputStream = new SubgitImportErrorListenerOutputStream();
         CommandListener listener = new CommandListener();
-        errorOutputStream.registerErrorListener(listener);
+        errorOutputStream.withErrorListener(listener);
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(errorOutputStream));
 
         writer.write("complete line");
@@ -34,9 +34,9 @@ public class ListenerStreamsTest {
 
     @Test
     public void progressEventsAreReported() throws IOException {
-        ProgressListenerOutputStream progressListenerOutputStream = new ProgressListenerOutputStream();
+        SubgitImportProgressListenerOutputStream progressListenerOutputStream = new SubgitImportProgressListenerOutputStream();
         CommandListener listener = new CommandListener();
-        progressListenerOutputStream.registerProgressListener(listener);
+        progressListenerOutputStream.withProgressListener(listener);
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(progressListenerOutputStream));
 
         writer.write("nothing to report");

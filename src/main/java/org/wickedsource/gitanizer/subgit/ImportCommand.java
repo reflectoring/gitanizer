@@ -1,14 +1,16 @@
 package org.wickedsource.gitanizer.subgit;
 
-import org.apache.commons.exec.CommandLine;
-import org.apache.commons.exec.DefaultExecutor;
-import org.apache.commons.exec.Executor;
-import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.zeroturnaround.exec.ProcessExecutor;
+import org.zeroturnaround.exec.stream.slf4j.Slf4jStream;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Wrapper around the subgit import command that allows to create a local git mirror of a remote
@@ -24,13 +26,13 @@ public class ImportCommand extends SubgitCommand {
 
     private String password;
 
-    private OutputStream out;
-
     private ImportCommandListener listener;
 
     private String workingDirectory;
 
     private String gitPath;
+
+    private Logger logger;
 
     public ImportCommand(String subgitPath, String gitPath) {
         super(subgitPath);
@@ -67,80 +69,88 @@ public class ImportCommand extends SubgitCommand {
         return this;
     }
 
-    /**
-     * Registers an OutputStream that receives all Output from subgit during the
-     * import process. Can be used to create a log file of the import process.
-     *
-     * @param out the OutputStream to receive the output.
-     * @return this object for chaining.
-     */
-    public ImportCommand withLogOutputStream(OutputStream out) {
-        this.out = new NewlineAfterProgressBarOutputStream(out);
+    public ImportCommand withLogger(Logger logger) {
+        this.logger = logger;
         return this;
     }
 
-    public void execute() throws IOException {
+    public void execute() {
         try {
             subgitImport();
             updateServerInfo();
         } catch (Exception e) {
-            // TODO: this exception should be logged into the import log file
-            out.close();
-            throw new IllegalStateException(e);
+            logger.error("Import Task has has failed! See stacktrace for details.", e);
+            // we can do nothing else here since we're running asynchronously
         }
     }
 
-    private void subgitImport() throws IOException {
-        CommandLine commandLine = new CommandLine(getSubgitPath());
-        commandLine.addArgument("import");
-        commandLine.addArgument("--svn-url");
-        commandLine.addArgument(this.sourceSvnUrl);
-        commandLine.addArgument("--non-interactive");
+    private void subgitImport() throws Exception {
+        List<String> commands = new ArrayList<>();
+        commands.add(this.getSubgitPath());
+        commands.add("import");
+        commands.add("--svn-url");
+        commands.add(this.sourceSvnUrl);
+        commands.add("--non-interactive");
 
         if (!StringUtils.isEmpty(this.username)) {
-            commandLine.addArgument("--username");
-            commandLine.addArgument(this.username);
+            commands.add("--username");
+            commands.add(this.username);
         }
 
         if (!StringUtils.isEmpty(this.password)) {
-            commandLine.addArgument("--password");
-            commandLine.addArgument(this.password);
+            commands.add("--password");
+            commands.add(this.password);
         }
 
-        commandLine.addArgument(this.targetGitPath);
+        commands.add(this.targetGitPath);
 
-        Executor executor = new DefaultExecutor();
-        executor.setWorkingDirectory(new File(this.workingDirectory));
-        executor.setStreamHandler(new PumpStreamHandler(
-                getProgressListener(this.listener),
-                getErrorListener(this.listener)));
+        try {
+            logger.info(String.format("Calling subgit with command line '%s'", commandLine(commands)));
+            new ProcessExecutor()
+                    .command(commands)
+                    .directory(new File(this.workingDirectory))
+                    .redirectError(new NewlineAfterProgressBarOutputStream(Slf4jStream.of(this.logger).asError()))
+                    .redirectErrorAlsoTo(new SubgitImportErrorListenerOutputStream()
+                            .withErrorListener(this.listener))
+                    .redirectOutput(new NewlineAfterProgressBarOutputStream(Slf4jStream.of(this.logger).asInfo()))
+                    .redirectOutputAlsoTo(new SubgitImportProgressListenerOutputStream()
+                            .withProgressListener(this.listener))
+                    .destroyOnExit()
+                    .execute();
+        } catch (InterruptedException e) {
+            logger.error(String.format("Import Task has been interrupted! Command line: '%s'", commandLine(commands)), e);
+        } catch (TimeoutException e) {
+            logger.error(String.format("Import Task has timed out! Command line: '%s'", commandLine(commands)), e);
+        } catch(IOException e){
+            // Removing the first Exception in the stacktrace, since it outputs all command line arguments
+            // and we don't want to log the password parameter. The cause exceptions are more interesting anyway.
+            throw (Exception) e.getCause();
+        }
 
-        executor.execute(commandLine);
+    }
+
+    private String commandLine(List<String> commands) {
+        String commandLine = StringUtils.join(commands, " ");
+        commandLine = commandLine.replaceAll("--password [^ ]+", "--password *****");
+        return commandLine;
     }
 
     private void updateServerInfo() throws IOException {
-        CommandLine commandLine = new CommandLine(getGitPath());
-        commandLine.addArgument("update-server-info");
-
-        Executor executor = new DefaultExecutor();
-        executor.setWorkingDirectory(new File(this.targetGitPath));
-        executor.setStreamHandler(new PumpStreamHandler(out, out));
-
-        executor.execute(commandLine);
-    }
-
-    private ProgressListenerOutputStream getProgressListener(ImportCommandListener listener) {
-        ProgressListenerOutputStream progressListenerOutputStream = new ProgressListenerOutputStream();
-        progressListenerOutputStream.registerProgressListener(listener);
-        progressListenerOutputStream.registerOutputStream(this.out);
-        return progressListenerOutputStream;
-    }
-
-    private ErrorListenerOutputStream getErrorListener(ImportCommandListener listener) {
-        ErrorListenerOutputStream errorListenerOutputStream = new ErrorListenerOutputStream();
-        errorListenerOutputStream.registerErrorListener(listener);
-        errorListenerOutputStream.registerOutputStream(this.out);
-        return errorListenerOutputStream;
+        List<String> commands = Arrays.asList(getGitPath(), "update-server-info");
+        try {
+            logger.info(String.format("Calling git with command line '%s'", commandLine(commands)));
+            new ProcessExecutor()
+                    .command(commands)
+                    .directory(new File(this.targetGitPath))
+                    .redirectError(Slf4jStream.of(this.logger).asError())
+                    .redirectOutput(Slf4jStream.of(this.logger).asInfo())
+                    .destroyOnExit()
+                    .execute();
+        } catch (InterruptedException e) {
+            logger.error(String.format("Updating git server info has been interrupted. Command line: '%s'", commandLine(commands)), e);
+        } catch (TimeoutException e) {
+            logger.error(String.format("Updating git server info has timed out. Command line: '%s'", commandLine(commands)), e);
+        }
     }
 
     @Override
@@ -154,4 +164,5 @@ public class ImportCommand extends SubgitCommand {
     public String getGitPath() {
         return gitPath;
     }
+
 }

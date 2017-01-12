@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class NewlineAfterProgressBarOutputStreamTest {
+public class NewlineAfterProgressBarSlf4jLogOutputStreamTest {
 
     @Test
     public void noNewlineAddedWhenNoMatch() throws IOException {

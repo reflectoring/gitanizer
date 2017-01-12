@@ -8,19 +8,14 @@ import java.util.List;
 /**
  * An OutputStream that forwards error messages to a listener.
  */
-public class ErrorListenerOutputStream extends OutputStream {
+public class SubgitImportErrorListenerOutputStream extends OutputStream {
 
     private StringBuilder currentLine = new StringBuilder();
 
     private List<ImportCommandListener> listeners = new ArrayList<>();
 
-    private OutputStream out;
-
     @Override
     public void write(int b) throws IOException {
-        if (this.out != null) {
-            out.write(b);
-        }
         if (b == '\n' || b == '\r') {
             for (ImportCommandListener listener : this.listeners) {
                 listener.onError(currentLine.toString());
@@ -35,24 +30,13 @@ public class ErrorListenerOutputStream extends OutputStream {
      * Register a progress monitor that will be notified each time an error event was
      * registered in this OutputStream.
      */
-    public void registerErrorListener(ImportCommandListener errorListener) {
+    public SubgitImportErrorListenerOutputStream withErrorListener(ImportCommandListener errorListener) {
         this.listeners.add(errorListener);
-    }
-
-    /**
-     * Registers an OutputStream that receives all output that is sent to this ErrorListenerOutputStream.
-     *
-     * @param out the OutputStream to receive all output.
-     */
-    public void registerOutputStream(OutputStream out) {
-        this.out = out;
+        return this;
     }
 
     @Override
     public void close() throws IOException {
         super.close();
-        if (out != null) {
-            out.close();
-        }
     }
 }

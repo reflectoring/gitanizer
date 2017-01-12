@@ -1,11 +1,9 @@
 package org.wickedsource.gitanizer.mirror.importing;
 
-import ch.qos.logback.classic.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.wickedsource.gitanizer.mirror.domain.Mirror;
 import org.wickedsource.gitanizer.mirror.domain.MirrorRepository;
-import org.wickedsource.gitanizer.mirror.importing.logging.ImportLoggerFactory;
 
 import java.time.LocalDateTime;
 
@@ -14,12 +12,9 @@ public class StatusMessageService {
 
     private final MirrorRepository mirrorRepository;
 
-    private ImportLoggerFactory importLoggerFactory;
-
     @Autowired
-    public StatusMessageService(MirrorRepository mirrorRepository, ImportLoggerFactory importLoggerFactory) {
+    public StatusMessageService(MirrorRepository mirrorRepository) {
         this.mirrorRepository = mirrorRepository;
-        this.importLoggerFactory = importLoggerFactory;
     }
 
     /**
@@ -42,7 +37,6 @@ public class StatusMessageService {
      */
     public void error(Long mirrorId, String errorMessage) {
         saveMessage(mirrorId, String.format("Error during import task: %s.", errorMessage), true);
-        // not logging error message since it is already logged in the subgit import command
     }
 
     /**
@@ -53,20 +47,15 @@ public class StatusMessageService {
      */
     public void upToDate(Long mirrorId) {
         saveMessage(mirrorId, "Mirror is up-to-date.", true);
-        Logger logger = importLoggerFactory.getImportLoggerForMirror(mirrorId, "gitanizer");
-        logger.info("Mirror is up-to-date.");
     }
 
     /**
      * Save a status message that says an error occurred.
      *
      * @param mirrorId ID of the mirror for which to store the status message.
-     * @param cause    the exception that caused the error
      */
-    public void error(Long mirrorId, Throwable cause) {
+    public void error(Long mirrorId) {
         saveMessage(mirrorId, "Error during execution of import task. Please check the log.", true);
-        Logger logger = importLoggerFactory.getImportLoggerForMirror(mirrorId, "gitanizer");
-        logger.error("Error during execution of import task. See above error messages and stacktrace for details", cause);
     }
 
     /**
@@ -76,8 +65,6 @@ public class StatusMessageService {
      */
     public void paused(Long mirrorId) {
         saveMessage(mirrorId, "Importing paused.", false);
-        Logger logger = importLoggerFactory.getImportLoggerForMirror(mirrorId, "gitanizer");
-        logger.info("Importing paused.");
     }
 
     /**
@@ -88,8 +75,6 @@ public class StatusMessageService {
      */
     public void syncStarted(Long mirrorId) {
         saveMessage(mirrorId, "Starting import task.", false);
-        Logger logger = importLoggerFactory.getImportLoggerForMirror(mirrorId, "gitanizer");
-        logger.info("Starting import task.");
     }
 
     private void saveMessage(Long mirrorId, String message, boolean updateLastImportDate) {
