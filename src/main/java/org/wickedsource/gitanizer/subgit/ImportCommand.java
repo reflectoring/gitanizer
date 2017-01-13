@@ -26,13 +26,15 @@ public class ImportCommand extends SubgitCommand {
 
     private String password;
 
-    private ImportCommandListener listener;
-
     private String workingDirectory;
 
     private String gitPath;
 
     private Logger logger;
+
+    private ProgressListener progressListener;
+
+    private ErrorListener errorListener;
 
     public ImportCommand(String subgitPath, String gitPath) {
         super(subgitPath);
@@ -59,8 +61,13 @@ public class ImportCommand extends SubgitCommand {
         return this;
     }
 
-    public ImportCommand withListener(ImportCommandListener listener) {
-        this.listener = listener;
+    public ImportCommand withErrorListener(ErrorListener listener) {
+        this.errorListener = listener;
+        return this;
+    }
+
+    public ImportCommand withProgressListener(ProgressListener listener) {
+        this.progressListener = listener;
         return this;
     }
 
@@ -111,17 +118,17 @@ public class ImportCommand extends SubgitCommand {
                     .directory(new File(this.workingDirectory))
                     .redirectError(new NewlineAfterProgressBarOutputStream(Slf4jStream.of(this.logger).asError()))
                     .redirectErrorAlsoTo(new SubgitImportErrorListenerOutputStream()
-                            .withErrorListener(this.listener))
+                            .withErrorListener(this.errorListener))
                     .redirectOutput(new NewlineAfterProgressBarOutputStream(Slf4jStream.of(this.logger).asInfo()))
                     .redirectOutputAlsoTo(new SubgitImportProgressListenerOutputStream()
-                            .withProgressListener(this.listener))
+                            .withProgressListener(this.progressListener))
                     .destroyOnExit()
                     .execute();
         } catch (InterruptedException e) {
             logger.error(String.format("Import Task has been interrupted! Command line: '%s'", commandLine(commands)), e);
         } catch (TimeoutException e) {
             logger.error(String.format("Import Task has timed out! Command line: '%s'", commandLine(commands)), e);
-        } catch(IOException e){
+        } catch (IOException e) {
             // Removing the first Exception in the stacktrace, since it outputs all command line arguments
             // and we don't want to log the password parameter. The cause exceptions are more interesting anyway.
             throw (Exception) e.getCause();

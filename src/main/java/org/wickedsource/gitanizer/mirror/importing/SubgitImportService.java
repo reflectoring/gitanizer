@@ -103,8 +103,6 @@ public class SubgitImportService {
         Path workdir = workdirConfiguration.getWorkdir(mirror.getId());
         Path gitDir = workdirConfiguration.getGitDir(mirror.getId());
 
-        StatusMessageListener listener = new StatusMessageListener(mirror.getId(), statusMessageService);
-
         Logger importLogger = importLoggerFactory.getImportLoggerForMirror(mirror.getId(), "subgit");
         OutputStream logOutputStream = new LoggingOutputStream(importLogger);
 
@@ -113,11 +111,12 @@ public class SubgitImportService {
                 .withPassword(mirror.getSvnPassword())
                 .withUsername(mirror.getSvnUsername())
                 .withSourceSvnUrl(mirror.getRemoteSvnUrl().toString())
-                .withListener(listener)
+                .withErrorListener(errorMessage -> statusMessageService.error(mirror.getId(), errorMessage))
+                .withProgressListener(percentage -> statusMessageService.progress(mirror.getId(), percentage))
                 .withWorkingDirectory(workdir.toString())
                 .withLogger(importLogger);
 
-        statusMessageService.syncStarted(mirror.getId());
+        statusMessageService.importStarted(mirror.getId());
 
         Runnable task = () -> {
             try {

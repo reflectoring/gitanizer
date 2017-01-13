@@ -1,9 +1,11 @@
 package org.wickedsource.gitanizer.mirror.importing;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.wickedsource.gitanizer.mirror.domain.Mirror;
 import org.wickedsource.gitanizer.mirror.domain.MirrorRepository;
+import org.wickedsource.gitanizer.mirror.importing.logging.ImportLoggerFactory;
 
 import java.time.LocalDateTime;
 
@@ -12,9 +14,13 @@ public class StatusMessageService {
 
     private final MirrorRepository mirrorRepository;
 
+    private ImportLoggerFactory importLoggerFactory;
+
+
     @Autowired
-    public StatusMessageService(MirrorRepository mirrorRepository) {
+    public StatusMessageService(MirrorRepository mirrorRepository, ImportLoggerFactory importLoggerFactory) {
         this.mirrorRepository = mirrorRepository;
+        this.importLoggerFactory = importLoggerFactory;
     }
 
     /**
@@ -65,6 +71,8 @@ public class StatusMessageService {
      */
     public void paused(Long mirrorId) {
         saveMessage(mirrorId, "Importing paused.", false);
+        Logger logger = importLoggerFactory.getImportLoggerForMirror(mirrorId, "gitanizer");
+        logger.info("Stopping import task ...");
     }
 
     /**
@@ -73,8 +81,10 @@ public class StatusMessageService {
      *
      * @param mirrorId ID of the mirror for which to store the status message.
      */
-    public void syncStarted(Long mirrorId) {
+    public void importStarted(Long mirrorId) {
         saveMessage(mirrorId, "Starting import task.", false);
+        Logger logger = importLoggerFactory.getImportLoggerForMirror(mirrorId, "gitanizer");
+        logger.info("Starting import task ...");
     }
 
     private void saveMessage(Long mirrorId, String message, boolean updateLastImportDate) {

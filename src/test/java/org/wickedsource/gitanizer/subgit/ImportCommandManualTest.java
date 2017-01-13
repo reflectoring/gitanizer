@@ -11,17 +11,7 @@ public class ImportCommandManualTest {
         new ImportCommand("D:\\programs\\subgit-3.2.2\\bin\\subgit.bat", "git")
                 .withSourceSvnUrl("http://svn.apache.org/repos/asf/velocity/engine/")
                 .withTargetGitPath("velocity.git")
-                .withListener(new ImportCommandListener() {
-                    @Override
-                    public void onProgress(int percentage) {
-                        System.out.println("PROGRESS: " + percentage);
-                    }
-
-                    @Override
-                    public void onError(String errorMessage) {
-                        System.err.println(errorMessage);
-                    }
-                })
+                .withProgressListener(percentage -> System.out.println("Progress: " + percentage))
                 .execute();
     }
 

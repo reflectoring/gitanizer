@@ -17,7 +17,7 @@ public class SubgitImportProgressListenerOutputStream extends OutputStream {
 
     private final static Pattern PROGRESS_PATTERN = Pattern.compile(".*\\s([0-9]+)%$");
 
-    private List<ImportCommandListener> progressListeners = new ArrayList<>();
+    private List<ProgressListener> progressListeners = new ArrayList<>();
 
     @Override
     public void write(int b) throws IOException {
@@ -25,7 +25,7 @@ public class SubgitImportProgressListenerOutputStream extends OutputStream {
         Matcher matcher = PROGRESS_PATTERN.matcher(currentContent);
         if (matcher.find()) {
             String progress = matcher.group(1);
-            for (ImportCommandListener progressMonitor : this.progressListeners) {
+            for (ProgressListener progressMonitor : this.progressListeners) {
                 progressMonitor.onProgress(Integer.valueOf(progress));
             }
             currentContent = new StringBuilder();
@@ -36,7 +36,7 @@ public class SubgitImportProgressListenerOutputStream extends OutputStream {
      * Register a listener that will be notified each time a progress event was
      * registered in this OutputStream.
      */
-    public SubgitImportProgressListenerOutputStream withProgressListener(ImportCommandListener progressListener) {
+    public SubgitImportProgressListenerOutputStream withProgressListener(ProgressListener progressListener) {
         this.progressListeners.add(progressListener);
         return this;
     }
