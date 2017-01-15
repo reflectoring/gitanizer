@@ -38,8 +38,6 @@ public class DeleteMirrorController {
 
     private WorkdirConfiguration workdirConfiguration;
 
-    private SubgitImportService subgitImportService;
-
     private CounterService counterService;
 
     private ExecutorService executor;
@@ -49,10 +47,9 @@ public class DeleteMirrorController {
     private Logger logger = LoggerFactory.getLogger(DeleteMirrorController.class);
 
     @Autowired
-    public DeleteMirrorController(MirrorRepository mirrorRepository, WorkdirConfiguration workdirConfiguration, SubgitImportService subgitImportService, CounterService counterService, GaugeService gaugeService, Environment environment) {
+    public DeleteMirrorController(MirrorRepository mirrorRepository, WorkdirConfiguration workdirConfiguration, CounterService counterService, GaugeService gaugeService, Environment environment) {
         this.mirrorRepository = mirrorRepository;
         this.workdirConfiguration = workdirConfiguration;
-        this.subgitImportService = subgitImportService;
         this.counterService = counterService;
         this.environment = environment;
         int maxParallelTasks = MAX_THREADS_DEFAULT;
@@ -84,9 +81,6 @@ public class DeleteMirrorController {
             throw new ResourceNotFoundException();
         }
         Path workdir = workdirConfiguration.getWorkdir(mirror.getId());
-        if (subgitImportService.isImportRunning(mirror.getId())) {
-            subgitImportService.cancelImport(mirror.getId());
-        }
         mirrorRepository.delete(id);
         deleteWorkdirAsync(workdir);
         return "redirect:/mirrors/list";

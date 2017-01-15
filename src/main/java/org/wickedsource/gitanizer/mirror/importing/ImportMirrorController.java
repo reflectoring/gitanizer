@@ -15,12 +15,9 @@ public class ImportMirrorController {
 
     private MirrorRepository mirrorRepository;
 
-    private SubgitImportService subgitImportService;
-
     @Autowired
-    public ImportMirrorController(MirrorRepository mirrorRepository, SubgitImportService subgitImportService) {
+    public ImportMirrorController(MirrorRepository mirrorRepository) {
         this.mirrorRepository = mirrorRepository;
-        this.subgitImportService = subgitImportService;
     }
 
     /**
@@ -30,14 +27,10 @@ public class ImportMirrorController {
      * @return redirect to the mirror list view.
      */
     @GetMapping("/mirrors/{id}/sync/start")
-    public String startImporting(@PathVariable long id) {
+    public String activateAutoSync(@PathVariable long id) {
         Mirror mirror = mirrorRepository.findOne(id);
         if (mirror == null) {
             throw new ResourceNotFoundException();
-        }
-
-        if (!subgitImportService.isImportRunning(mirror.getId())) {
-            subgitImportService.startImport(mirror);
         }
 
         mirror.setSyncActive(true);
@@ -46,19 +39,16 @@ public class ImportMirrorController {
 
     /**
      * Stops the SVN to GIT synchronization for the Mirror with the specified ID.
+     * Note that an import task that is currently running will continue!
      *
      * @param id ID of the Mirror whose synchronization to stop.
      * @return redirect to the mirror list view.
      */
     @GetMapping("/mirrors/{id}/sync/stop")
-    public String stopImporting(@PathVariable long id) {
+    public String deactivateAutoSync(@PathVariable long id) {
         Mirror mirror = mirrorRepository.findOne(id);
         if (mirror == null) {
             throw new ResourceNotFoundException();
-        }
-
-        if (subgitImportService.isImportRunning(mirror.getId())) {
-            subgitImportService.cancelImport(mirror.getId());
         }
 
         mirror.setSyncActive(false);

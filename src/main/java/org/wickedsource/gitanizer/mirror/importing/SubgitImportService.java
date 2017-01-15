@@ -38,7 +38,7 @@ public class SubgitImportService {
 
     public static final String GAUGE_MAX_PARALLEL_TASKS = "gitanizer.gauge.importTasks.maxParallel";
 
-    private StatusMessageService statusMessageService;
+    private MirrorStatusService mirrorStatusService;
 
     private ExecutorService executor;
 
@@ -57,8 +57,8 @@ public class SubgitImportService {
     private static final int MAX_THREADS_DEFAULT = 5;
 
     @Autowired
-    public SubgitImportService(StatusMessageService statusMessageService, SubgitConfiguration subgitConfiguration, WorkdirConfiguration workdirConfiguration, CounterService counterService, GaugeService gaugeService, Environment environment, ImportLoggerFactory importLoggerFactory) {
-        this.statusMessageService = statusMessageService;
+    public SubgitImportService(MirrorStatusService mirrorStatusService, SubgitConfiguration subgitConfiguration, WorkdirConfiguration workdirConfiguration, CounterService counterService, GaugeService gaugeService, Environment environment, ImportLoggerFactory importLoggerFactory) {
+        this.mirrorStatusService = mirrorStatusService;
         this.subgitConfiguration = subgitConfiguration;
         this.workdirConfiguration = workdirConfiguration;
         this.counterService = counterService;
@@ -111,22 +111,22 @@ public class SubgitImportService {
                 .withPassword(mirror.getSvnPassword())
                 .withUsername(mirror.getSvnUsername())
                 .withSourceSvnUrl(mirror.getRemoteSvnUrl().toString())
-                .withErrorListener(errorMessage -> statusMessageService.error(mirror.getId(), errorMessage))
-                .withProgressListener(percentage -> statusMessageService.progress(mirror.getId(), percentage))
+                .withErrorListener(errorMessage -> mirrorStatusService.error(mirror.getId(), errorMessage))
+                .withProgressListener(percentage -> mirrorStatusService.progress(mirror.getId(), percentage))
                 .withWorkingDirectory(workdir.toString())
                 .withLogger(importLogger);
 
-        statusMessageService.importStarted(mirror.getId());
+        mirrorStatusService.importStarted(mirror.getId());
 
         Runnable task = () -> {
             try {
                 counterService.decrement(COUNTER_QUEUED_TASKS);
                 counterService.increment(COUNTER_ACTIVE_TASKS);
                 importCommand.execute();
-                statusMessageService.upToDate(mirror.getId());
+                mirrorStatusService.importFinished(mirror.getId());
                 taskMap.remove(mirror.getId());
             } catch (Exception e) {
-                statusMessageService.error(mirror.getId());
+                mirrorStatusService.error(mirror.getId());
                 logger.error(String.format("IOException during async execution of subgit import command: %s", importCommand), e);
             } finally {
                 IOUtils.closeQuietly(logOutputStream);
@@ -149,27 +149,6 @@ public class SubgitImportService {
         Path workdir = workdirConfiguration.getWorkdir(mirror.getId());
         String logFileName = String.format("%s/subgit-import.log", workdir);
         return Paths.get(logFileName);
-    }
-
-    /**
-     * Cancels the subgit import of the mirror with the given ID. If no import is currently running, does nothing.
-     * The import task can be resumed at a later time by calling {@link #startImport(Mirror)}.
-     *
-     * @param mirrorId ID of the mirror whose import to cancel.
-     */
-    public void cancelImport(Long mirrorId) {
-        ImportTask task = taskMap.get(mirrorId);
-        Future future = task.getFuture();
-        if (future != null) {
-            if (future.cancel(true)) {
-                IOUtils.closeQuietly(task.getLogOutputStream());
-                counterService.decrement(COUNTER_ACTIVE_TASKS);
-                statusMessageService.paused(mirrorId);
-                taskMap.remove(mirrorId);
-            } else {
-                logger.warn("Could not cancel ImportTask for mirror {}", mirrorId);
-            }
-        }
     }
 
     /**

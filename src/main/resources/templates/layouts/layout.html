@@ -14,16 +14,26 @@
     <link rel="stylesheet" th:href="@{/static/gitanizer/css/gitanizer.css}"/>
     <th:block layout:fragment="css"></th:block>
 </head>
-<body class="hold-transition skin-red layout-top-nav">
+<body class="hold-transition skin-red fixed sidebar-mini">
 <div class="wrapper">
 
     <header class="main-header">
-        <nav class="navbar navbar-static-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <a href="/" class="navbar-brand"><i class="fa fa-code-fork"></i>&nbsp;<b>git</b>anizer</a>
-                </div>
 
+        <a href="/" class="logo">
+            <!-- mini logo for sidebar mini 50x50 pixels -->
+            <span class="logo-mini">git</span>
+            <!-- logo for regular state and mobile devices -->
+            <span class="logo-lg"><i class="fa fa-code-fork"></i>&nbsp;<b>git</b>anizer</span>
+        </a>
+
+        <nav class="navbar navbar-static-top">
+            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <div class="container">
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
                         <li>
@@ -37,15 +47,27 @@
         </nav>
     </header>
 
-    <div class="content-wrapper">
-        <div class="container">
+    <aside class="main-sidebar">
+        <section class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="header">MIRRORS</li>
+                <li><a th:href="@{/mirrors/list}"><i class="fa fa-list"></i>
+                    <span>List all Mirrors</span></a>
+                </li>
+                <li><a th:href="@{/mirrors/create}"><i class="fa fa-plus-circle"></i>
+                    <span>Add a new Mirror</span></a>
+                </li>
+                <li class="header">ADMINISTRATION</li>
+                <li><a th:href="@{/admin}"><i class="fa fa-cog"></i>
+                    <span>Administration</span></a></li>
+            </ul>
+        </section>
+    </aside>
 
-            <section class="content" layout:fragment="content">
-                HERE GOES THE CONTENT
-            </section>
-
+    <div class="content-wrapper" style="min-height: 403px;">
+        <div layout:fragment="content">
+            HERE GOES THE CONTENT HEADER AND CONTENT
         </div>
-
     </div>
 
     <footer class="main-footer">
@@ -61,10 +83,6 @@
 <script th:src="@{/static/jQuery/jquery-2.2.3.min.js}"></script>
 <script th:src="@{/static/bootstrap/js/bootstrap.min.js}"></script>
 <script th:src="@{/static/AdminLTE/js/app.min.js}"></script>
-<script th:src="@{/static/clipboardjs/js/clipboard.min.js}"/>
-<script language="javascript">
-    new Clipboard('.btn');
-</script>
 <th:block layout:fragment="js"></th:block>
 </body>
 </html>

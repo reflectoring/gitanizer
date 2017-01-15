@@ -81,14 +81,9 @@ public class ImportCommand extends SubgitCommand {
         return this;
     }
 
-    public void execute() {
-        try {
-            subgitImport();
-            updateServerInfo();
-        } catch (Exception e) {
-            logger.error("Import Task has has failed! See stacktrace for details.", e);
-            // we can do nothing else here since we're running asynchronously
-        }
+    public void execute() throws Exception {
+        subgitImport();
+        updateServerInfo();
     }
 
     private void subgitImport() throws Exception {
@@ -126,8 +121,10 @@ public class ImportCommand extends SubgitCommand {
                     .execute();
         } catch (InterruptedException e) {
             logger.error(String.format("Import Task has been interrupted! Command line: '%s'", commandLine(commands)), e);
+            throw e;
         } catch (TimeoutException e) {
             logger.error(String.format("Import Task has timed out! Command line: '%s'", commandLine(commands)), e);
+            throw e;
         } catch (IOException e) {
             // Removing the first Exception in the stacktrace, since it outputs all command line arguments
             // and we don't want to log the password parameter. The cause exceptions are more interesting anyway.
@@ -142,7 +139,7 @@ public class ImportCommand extends SubgitCommand {
         return commandLine;
     }
 
-    private void updateServerInfo() throws IOException {
+    private void updateServerInfo() throws Exception {
         List<String> commands = Arrays.asList(getGitPath(), "update-server-info");
         try {
             logger.info(String.format("Calling git with command line '%s'", commandLine(commands)));
@@ -155,8 +152,10 @@ public class ImportCommand extends SubgitCommand {
                     .execute();
         } catch (InterruptedException e) {
             logger.error(String.format("Updating git server info has been interrupted. Command line: '%s'", commandLine(commands)), e);
+            throw e;
         } catch (TimeoutException e) {
             logger.error(String.format("Updating git server info has timed out. Command line: '%s'", commandLine(commands)), e);
+            throw e;
         }
     }
 

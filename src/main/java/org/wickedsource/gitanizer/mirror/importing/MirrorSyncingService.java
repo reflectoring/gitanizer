@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 @ConditionalOnProperty(value = "gitanizer.scheduling.disabled", havingValue = "false", matchIfMissing = true)
-public class MirrorImportingService {
+public class MirrorSyncingService {
 
     public static final int DEFAULT_INTERVAL = 5 * 60;
 
@@ -26,10 +26,10 @@ public class MirrorImportingService {
 
     private int intervalInSeconds = DEFAULT_INTERVAL;
 
-    private Logger logger = LoggerFactory.getLogger(MirrorImportingService.class);
+    private Logger logger = LoggerFactory.getLogger(MirrorSyncingService.class);
 
     @Autowired
-    public MirrorImportingService(SubgitImportService subgitImportService, MirrorRepository mirrorRepository, Environment environment) {
+    public MirrorSyncingService(SubgitImportService subgitImportService, MirrorRepository mirrorRepository, Environment environment) {
         this.subgitImportService = subgitImportService;
         this.mirrorRepository = mirrorRepository;
         Environment environment1 = environment;

@@ -1,7 +1,7 @@
 <dataset>
     <mirror id="1" display_name="coderadar" remote_svn_url="http://coderadar.git"
-            last_status_update="2016-11-27 12:00:00"
-            sync_active="false" last_status_message="No message yet" workdir_name="workdir"
+            sync_active="false" workdir_name="workdir"
             git_repository_name="coderadar.git" last_import_finished="2016-11-27 12:00:00"
-            svn_username="username" svn_password="password" git_username="username" git_password="password"/>
+            svn_username="username" svn_password="password" git_username="username" git_password="password"
+            status="1" progress="0"/>
 </dataset>

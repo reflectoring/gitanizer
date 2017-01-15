@@ -1,5 +1,7 @@
 package org.wickedsource.gitanizer.mirror.list;
 
+import org.wickedsource.gitanizer.mirror.domain.MirrorStatus;
+
 import java.time.LocalDateTime;
 
 public class MirrorDTO {
@@ -10,11 +12,15 @@ public class MirrorDTO {
 
     private LocalDateTime lastChangeDate;
 
-    private String lastStatusMessage;
-
-    private boolean syncStatus;
+    private boolean syncActive;
 
     private String gitCloneUrl;
+
+    private LocalDateTime lastImportFinishedDate;
+
+    private MirrorStatus status;
+
+    private Integer progress;
 
     public long getId() {
         return id;
@@ -40,20 +46,12 @@ public class MirrorDTO {
         this.lastChangeDate = lastChangeDate;
     }
 
-    public String getLastStatusMessage() {
-        return lastStatusMessage;
+    public boolean isSyncActive() {
+        return syncActive;
     }
 
-    public void setLastStatusMessage(String lastStatusMessage) {
-        this.lastStatusMessage = lastStatusMessage;
-    }
-
-    public boolean isSyncStatus() {
-        return syncStatus;
-    }
-
-    public void setSyncStatus(boolean syncStatus) {
-        this.syncStatus = syncStatus;
+    public void setSyncActive(boolean syncActive) {
+        this.syncActive = syncActive;
     }
 
     public String getGitCloneUrl() {
@@ -62,5 +60,29 @@ public class MirrorDTO {
 
     public void setGitCloneUrl(String gitCloneUrl) {
         this.gitCloneUrl = gitCloneUrl;
+    }
+
+    public LocalDateTime getLastImportFinishedDate() {
+        return lastImportFinishedDate;
+    }
+
+    public void setLastImportFinishedDate(LocalDateTime lastImportFinishedDate) {
+        this.lastImportFinishedDate = lastImportFinishedDate;
+    }
+
+    public MirrorStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(MirrorStatus status) {
+        this.status = status;
+    }
+
+    public Integer getProgress() {
+        return progress;
+    }
+
+    public void setProgress(Integer progress) {
+        this.progress = progress;
     }
 }

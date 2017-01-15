@@ -36,23 +36,23 @@ public class Mirror {
     @Column
     private String gitPassword;
 
-    @Column(nullable = false)
-    private LocalDateTime lastStatusUpdate;
-
     @Column
     private LocalDateTime lastImportFinished;
 
     @Column(nullable = false)
     private boolean syncActive;
 
-    @Column
-    private String lastStatusMessage;
-
     @Column(unique = true, nullable = false)
     private String gitRepositoryName;
 
     @Column(unique = true, nullable = false)
     private String workdirName;
+
+    @Column
+    private MirrorStatus status;
+
+    @Column
+    private Integer progress;
 
     public long getId() {
         return id;
@@ -78,28 +78,12 @@ public class Mirror {
         this.remoteSvnUrl = remoteSvnUrl;
     }
 
-    public LocalDateTime getLastStatusUpdate() {
-        return lastStatusUpdate;
-    }
-
-    public void setLastStatusUpdate(LocalDateTime lastStatusUpdate) {
-        this.lastStatusUpdate = lastStatusUpdate;
-    }
-
     public boolean isSyncActive() {
         return syncActive;
     }
 
     public void setSyncActive(boolean syncActive) {
         this.syncActive = syncActive;
-    }
-
-    public String getLastStatusMessage() {
-        return lastStatusMessage;
-    }
-
-    public void setLastStatusMessage(String lastStatusMessage) {
-        this.lastStatusMessage = lastStatusMessage;
     }
 
     public String getWorkdirName() {
@@ -171,5 +155,21 @@ public class Mirror {
      */
     public boolean isGitRepositoryRestricted() {
         return !StringUtils.isEmpty(this.gitUsername) || !StringUtils.isEmpty(this.gitPassword);
+    }
+
+    public MirrorStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(MirrorStatus status) {
+        this.status = status;
+    }
+
+    public Integer getProgress() {
+        return progress;
+    }
+
+    public void setProgress(Integer progress) {
+        this.progress = progress;
     }
 }

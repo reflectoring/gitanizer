@@ -18,7 +18,7 @@ public interface MirrorRepository extends CrudRepository<Mirror, Long> {
 
     Mirror findByGitUsername(String username);
 
-    @Query("select m from Mirror m where lastImportFinished < :date and syncActive = true")
+    @Query("select m from Mirror m where (lastImportFinished is null or lastImportFinished < :date) and syncActive = true")
     List<Mirror> findByLastImportFinishedOlderThan(@Param("date") LocalDateTime date);
 
     int countByGitUsername(String username);

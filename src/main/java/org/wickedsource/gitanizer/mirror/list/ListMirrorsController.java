@@ -35,18 +35,18 @@ public class ListMirrorsController {
             MirrorDTO dto = new MirrorDTO();
             dto.setId(mirror.getId());
             dto.setName(mirror.getDisplayName());
-            dto.setLastChangeDate(mirror.getLastStatusUpdate());
-            dto.setSyncStatus(mirror.isSyncActive());
+            dto.setSyncActive(mirror.isSyncActive());
             dto.setGitCloneUrl(getGitCloneUrl(request, mirror));
-            if (mirror.getLastStatusMessage() == null) {
-                dto.setLastStatusMessage("No status yet");
-            } else {
-                dto.setLastStatusMessage(mirror.getLastStatusMessage());
-            }
+            dto.setStatus(mirror.getStatus());
+            dto.setProgress(mirror.getProgress());
+            dto.setLastImportFinishedDate(mirror.getLastImportFinished());
             mirrorDTOs.add(dto);
         }
 
+        List<MirrorDTOPair> mirrorPairs = MirrorDTOPair.fromList(mirrorDTOs);
+
         model.addAttribute("mirrors", mirrorDTOs);
+        model.addAttribute("mirrorPairs", mirrorPairs);
         return "/mirrors/list";
     }
 

@@ -9,7 +9,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.wickedsource.gitanizer.core.DateProvider;
 import org.wickedsource.gitanizer.core.security.GitanizerUserDetailsService;
 import org.wickedsource.gitanizer.mirror.domain.Mirror;
 import org.wickedsource.gitanizer.mirror.domain.MirrorRepository;
@@ -25,14 +24,11 @@ public class CreateMirrorController {
 
     private MirrorRepository mirrorRepository;
 
-    private DateProvider dateProvider;
-
     private GitanizerUserDetailsService userDetailsService;
 
     @Autowired
-    public CreateMirrorController(MirrorRepository mirrorRepository, DateProvider dateProvider, GitanizerUserDetailsService userDetailsService) {
+    public CreateMirrorController(MirrorRepository mirrorRepository, GitanizerUserDetailsService userDetailsService) {
         this.mirrorRepository = mirrorRepository;
-        this.dateProvider = dateProvider;
         this.userDetailsService = userDetailsService;
     }
 
@@ -64,7 +60,6 @@ public class CreateMirrorController {
             Mirror mirror = new Mirror();
             mirror.setDisplayName(form.getDisplayName());
             mirror.setRemoteSvnUrl(new URL(form.getRemoteSvnUrl()));
-            mirror.setLastStatusUpdate(dateProvider.now());
             mirror.setWorkdirName(UUID.randomUUID().toString());
             mirror.setGitRepositoryName(form.getGitRepositoryName());
 
