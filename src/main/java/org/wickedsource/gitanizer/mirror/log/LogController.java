@@ -59,7 +59,7 @@ public class LogController {
 
             model.addAttribute("mirror", mirrorDTO);
 
-            return "/mirrors/log";
+            return "mirrors/log";
         } catch (IOException e) {
             throw new IllegalStateException("Error while accessing log file: " + e.getMessage(), e);
         }

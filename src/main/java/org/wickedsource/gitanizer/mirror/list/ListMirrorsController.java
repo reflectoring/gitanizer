@@ -47,7 +47,7 @@ public class ListMirrorsController {
 
         model.addAttribute("mirrors", mirrorDTOs);
         model.addAttribute("mirrorPairs", mirrorPairs);
-        return "/mirrors/list";
+        return "mirrors/list";
     }
 
     private String getGitCloneUrl(HttpServletRequest request, Mirror mirror) {

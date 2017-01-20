@@ -75,13 +75,17 @@ task zip(type: Zip, dependsOn: bootRepackage) {
 
 build.dependsOn(zip)
 
+springBoot{
+    executable = true
+}
+
 bootRun {
     classpath = sourceSets.main.runtimeClasspath + configurations.dev
     jvmArgs =
             [
                     // application configuration
-                    "-Dgitanizer.workdir=D:\\gitanizer",
-                    "-Dgitanizer.subgit.executable.path=D:\\programs\\subgit-3.2.2\\bin\\subgit.bat",
+                    "-Dgitanizer.workdir=C:\\gitanizer",
+                    "-Dgitanizer.subgit.executable.path=C:\\daten\\programme\\subgit-3.2.2\\bin\\subgit.bat",
                     "-Dgitanizer.git.executable.path=git",
                     "-Dgitanizer.importTasks.maxThreads=5",
                     "-Dgitanizer.importTasks.intervalInSeconds=10",

@@ -35,7 +35,7 @@ public class CreateMirrorController {
     @GetMapping(value = "/mirrors/create")
     public String displayForm(Model model) {
         model.addAttribute("form", new CreateMirrorForm());
-        return "/mirrors/create";
+        return "mirrors/create";
     }
 
     @PostMapping(value = "/mirrors/create")
@@ -55,7 +55,7 @@ public class CreateMirrorController {
             }
 
             if (bindingResult.hasErrors()) {
-                return "/mirrors/create";
+                return "mirrors/create";
             }
             Mirror mirror = new Mirror();
             mirror.setDisplayName(form.getDisplayName());

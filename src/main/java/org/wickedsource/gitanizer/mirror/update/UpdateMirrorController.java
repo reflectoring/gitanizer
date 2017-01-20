@@ -51,7 +51,7 @@ public class UpdateMirrorController {
         form.setGitRepositoryName(mirror.getGitRepositoryName());
 
         model.addAttribute("form", form);
-        return "/mirrors/update";
+        return "mirrors/update";
     }
 
     @PostMapping(value = "/mirrors/{id}/update")
@@ -75,7 +75,7 @@ public class UpdateMirrorController {
             }
 
             if (bindingResult.hasErrors()) {
-                return "/mirrors/update";
+                return "mirrors/update";
             }
 
             mirror.setDisplayName(form.getDisplayName());
