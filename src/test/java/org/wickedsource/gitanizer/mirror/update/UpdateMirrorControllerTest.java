@@ -26,7 +26,7 @@ public class UpdateMirrorControllerTest extends ControllerTestTemplate {
     public void displayForm() throws Exception {
         mvc().perform(get("/mirrors/1/update"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/mirrors/update"));
+                .andExpect(view().name("mirrors/update"));
     }
 
     @Test
@@ -54,7 +54,7 @@ public class UpdateMirrorControllerTest extends ControllerTestTemplate {
                 .param("remoteSvnUrl", "invalidUrl")
                 .param("gitRepositoryName", "coderadar.git"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/mirrors/update"));
+                .andExpect(view().name("mirrors/update"));
     }
 
     @Test
@@ -66,7 +66,7 @@ public class UpdateMirrorControllerTest extends ControllerTestTemplate {
                 .param("remoteSvnUrl", "invalidUrl")
                 .param("gitRepositoryName", "coderadar.git"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/mirrors/update"));
+                .andExpect(view().name("mirrors/update"));
     }
 
 }

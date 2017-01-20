@@ -14,7 +14,7 @@ public class CreateMirrorControllerTest extends ControllerTestTemplate {
     public void displayForm() throws Exception {
         mvc().perform(get("/mirrors/create"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/mirrors/create"));
+                .andExpect(view().name("mirrors/create"));
     }
 
     @Test
@@ -34,7 +34,7 @@ public class CreateMirrorControllerTest extends ControllerTestTemplate {
                 .param("remoteSvnUrl", "invalidUrl")
                 .param("gitRepositoryName", "repository.git"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/mirrors/create"));
+                .andExpect(view().name("mirrors/create"));
     }
 
 }
